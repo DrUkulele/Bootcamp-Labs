@@ -7,7 +7,7 @@ public class Main {
         //variables
         float firstNumber;
         float secondNumber;
-        String calculations;
+        String calculation;
 
         //user input scanner
         Scanner scanner = new Scanner(System.in);
@@ -21,6 +21,7 @@ public class Main {
 
         System.out.println("Please enter the second number:");
         secondNumber = scanner.nextFloat();
+        scanner.nextLine();
 
         //ask user for math operation they want ot do
         System.out.println("Please enter one if the following Possible calculations\n");
@@ -29,19 +30,21 @@ public class Main {
         System.out.println("Multiply or *.\n");
         System.out.println("Divided or /.\n");
 
-        calculations = scanner.nextLine();
+        calculation = scanner.nextLine();
 
         //do calculation
-        if (calculations.equalsIgnoreCase("Add") || calculations.equals("+")) {
-            System.out.println(firstNumber + secondNumber);
-        } else if (calculations.equalsIgnoreCase("Subtract") || calculations.equals("-")) {
-            System.out.println(firstNumber - secondNumber);
+        if (calculation.equalsIgnoreCase("Add") || calculation.equals("+")) {
+            System.out.printf("%.2f + %.2f = " + (firstNumber + secondNumber), firstNumber, secondNumber);
 
-        } else if (calculations.equalsIgnoreCase("Multiply") || calculations.equals("*")) {
-            System.out.println(firstNumber * secondNumber);
+        } else if (calculation.equalsIgnoreCase("Subtract") || calculation.equals("-")) {
+            System.out.printf("%.2f - %.2f = " + (firstNumber - secondNumber), firstNumber, secondNumber);
+
+        }
+        else if (calculation.equalsIgnoreCase("Multiply") || calculation.equals("*")) {
+            System.out.printf("%.2f * %.2f = " + (firstNumber * secondNumber), firstNumber, secondNumber);
 
         } else
-            System.out.println(firstNumber / secondNumber);
+            System.out.printf("%.2f / %.2f = " + (firstNumber / secondNumber), firstNumber, secondNumber);
 
     }
 }
