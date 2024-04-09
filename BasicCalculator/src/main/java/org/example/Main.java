@@ -43,8 +43,10 @@ public class Main {
         else if (calculation.equalsIgnoreCase("Multiply") || calculation.equals("*")) {
             System.out.printf("%.2f * %.2f = " + (firstNumber * secondNumber), firstNumber, secondNumber);
 
-        } else
+        } else if (calculation.equalsIgnoreCase("Divide") || calculation.equals("/")) {
             System.out.printf("%.2f / %.2f = " + (firstNumber / secondNumber), firstNumber, secondNumber);
+        }else
+            System.out.println("You entered an incorrect operator. Please try again. ");
 
     }
 }
