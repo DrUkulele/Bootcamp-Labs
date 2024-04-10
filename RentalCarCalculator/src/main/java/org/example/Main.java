@@ -25,12 +25,12 @@ public class Main {
     }
 
 
-    public static String pickupdate(){
+    public static String pickupdate() {
         Scanner scanner = new Scanner(System.in);
         String confirm = "n";
         String pickUpDate = "";
 
-        while(confirm.equalsIgnoreCase("n") || confirm.equalsIgnoreCase("no")) {
+        while (confirm.equalsIgnoreCase("n") || confirm.equalsIgnoreCase("no")) {
             //user enters pickup date
             System.out.println("Please enter the date you want to pick up the rental care in mm-dd-yyyy format.");
             pickUpDate = scanner.nextLine();
@@ -41,12 +41,12 @@ public class Main {
         return pickUpDate;
     }
 
-    public static int daystorent(){
+    public static int daystorent() {
         Scanner scanner = new Scanner(System.in);
         String confirm = "n";
         int daysToRent = 0;
 
-        while(confirm.equalsIgnoreCase("n")) {
+        while (confirm.equalsIgnoreCase("n")) {
             //user enters pickup date
             System.out.println("Please enter how many days you want to rent the car.");
             daysToRent = scanner.nextInt();
@@ -58,15 +58,49 @@ public class Main {
         return daysToRent;
     }
 
-    public static boolean tolltag(){
+    public static boolean tolltag() {
         Scanner scanner = new Scanner(System.in);
-        String confirm = "n";
+        String confirm = "";
         boolean tollTag = false;
+        boolean userInput = true;
 
-        while(!tollTag){
+        while (userInput == true) {
+            //user enters pickup date
+            System.out.println("Would you like to add an Electronic Toll Tag for $3.95 a day?(y/n) ");
+            confirm = scanner.nextLine();
+            switch (confirm.toLowerCase()) {
+                case "y":
+                    System.out.println("You have chosen to add an electronic Toll Tag for $3.95\n Is that correct?(y/n)");
+                    confirm = scanner.nextLine();
+                    switch (confirm.toLowerCase()) {
+                        case "y":
+                            System.out.println("You have added the Toll Tag.");
+                            tollTag = true;
+                            userInput = false;
+                            break;
+                        case "n":
+                            tolltag();
+                            break;
+
+                    }
+                    break;
+
+                case "n":
+                    System.out.println("You have chosen not to add an electronic Toll Tag for $3.95\n Is that correct?(y/n)");
+                    confirm = scanner.nextLine();
+                    switch (confirm.toLowerCase()) {
+                        case "y":
+                            System.out.println("You have not added the Toll Tag.");
+                            userInput = false;
+                            break;
+                        case "n":
+                            tolltag();
+                            break;
+                    }
+                    break;
+            }
 
         }
+        return tollTag;
     }
-
 }
-
