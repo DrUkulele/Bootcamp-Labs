@@ -24,6 +24,7 @@ public class Main {
         tollTag = tolltag();
         gps = gps();
         roadSide = roadside();
+        currentAge = age();
     }
 
 
@@ -198,6 +199,24 @@ public class Main {
         return roadSide;
 
     }
+
+    public static int age() {
+        Scanner scanner = new Scanner(System.in);
+        String confirm = "n";
+        int age = 0;
+
+        while (confirm.equalsIgnoreCase("n")) {
+            //user enters pickup date
+            System.out.println("Please enter how old you are in years.");
+            age = scanner.nextInt();
+            scanner.nextLine();
+            System.out.printf("You are %d years old? (y/n)\n", age);
+            confirm = scanner.nextLine();
+
+        }
+        return age;
+    }
 }
+
 
 
