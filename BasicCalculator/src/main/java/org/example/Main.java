@@ -24,29 +24,43 @@ public class Main {
         scanner.nextLine();
 
         //ask user for math operation they want ot do
+        question();
+        calculation = scanner.nextLine();
+
+        //do calculation
+        if (calculation.equalsIgnoreCase("Add") || calculation.equals("+")) {
+            add(firstNumber, secondNumber);
+
+        } else if (calculation.equalsIgnoreCase("Subtract") || calculation.equals("-")) {
+            subtract(firstNumber, secondNumber);
+
+        } else if (calculation.equalsIgnoreCase("Multiply") || calculation.equals("*")) {
+            multiply(firstNumber, secondNumber);
+
+        } else if (calculation.equalsIgnoreCase("Divide") || calculation.equals("/")) {
+            divide(firstNumber, secondNumber);
+        } else
+            System.out.println("You entered an incorrect operator. Please try again. ");
+    }
+
+    public static void question(){
         System.out.println("Please enter one if the following Possible calculations\n");
         System.out.println("Add or +.\n");
         System.out.println("Subtract or -.\n");
         System.out.println("Multiply or *.\n");
         System.out.println("Divided or /.\n");
+    }
 
-        calculation = scanner.nextLine();
-
-        //do calculation
-        if (calculation.equalsIgnoreCase("Add") || calculation.equals("+")) {
-            System.out.printf("%.2f + %.2f = " + (firstNumber + secondNumber), firstNumber, secondNumber);
-
-        } else if (calculation.equalsIgnoreCase("Subtract") || calculation.equals("-")) {
-            System.out.printf("%.2f - %.2f = " + (firstNumber - secondNumber), firstNumber, secondNumber);
-
-        }
-        else if (calculation.equalsIgnoreCase("Multiply") || calculation.equals("*")) {
-            System.out.printf("%.2f * %.2f = " + (firstNumber * secondNumber), firstNumber, secondNumber);
-
-        } else if (calculation.equalsIgnoreCase("Divide") || calculation.equals("/")) {
-            System.out.printf("%.2f / %.2f = " + (firstNumber / secondNumber), firstNumber, secondNumber);
-        }else
-            System.out.println("You entered an incorrect operator. Please try again. ");
-
+    public static void add(float firstNumber, float secondNumber){
+        System.out.printf("%.2f + %.2f = %.2f ", firstNumber, secondNumber, (firstNumber + secondNumber));
+    }
+    public static void subtract(float firstNumber, float secondNumber){
+        System.out.printf("%.2f - %.2f = %.2f ", firstNumber, secondNumber, (firstNumber - secondNumber));
+    }
+    public static void multiply(float firstNumber, float secondNumber){
+        System.out.printf("%.2f * %.2f = %.2f ", firstNumber, secondNumber, (firstNumber * secondNumber));
+    }
+    public static void divide(float firstNumber, float secondNumber){
+        System.out.printf("%.2f / %.2f = %.2f ", firstNumber, secondNumber, (firstNumber / secondNumber));
     }
 }
