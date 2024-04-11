@@ -22,6 +22,8 @@ public class Main {
         pickUpDate = pickupdate();
         daysToRent = daystorent();
         tollTag = tolltag();
+        gps = gps();
+        roadSide = roadside();
     }
 
 
@@ -70,7 +72,7 @@ public class Main {
             confirm = scanner.nextLine();
             switch (confirm.toLowerCase()) {
                 case "y":
-                    System.out.println("You have chosen to add an electronic Toll Tag for $3.95\n Is that correct?(y/n)");
+                    System.out.println("You have chosen to add an electronic Toll Tag for $3.95 a day.\n Is that correct?(y/n)");
                     confirm = scanner.nextLine();
                     switch (confirm.toLowerCase()) {
                         case "y":
@@ -86,7 +88,7 @@ public class Main {
                     break;
 
                 case "n":
-                    System.out.println("You have chosen not to add an electronic Toll Tag for $3.95\n Is that correct?(y/n)");
+                    System.out.println("You have chosen not to add an electronic Toll Tag for $3.95 a day.\n Is that correct?(y/n)");
                     confirm = scanner.nextLine();
                     switch (confirm.toLowerCase()) {
                         case "y":
@@ -103,4 +105,99 @@ public class Main {
         }
         return tollTag;
     }
+
+    public static boolean gps() {
+        Scanner scanner = new Scanner(System.in);
+        String confirm = "";
+        boolean gps = false;
+        boolean userInput = true;
+
+        while (userInput == true) {
+            //user enters pickup date
+            System.out.println("Would you like to add GPS for $2.95 a day?(y/n) ");
+            confirm = scanner.nextLine();
+            switch (confirm.toLowerCase()) {
+                case "y":
+                    System.out.println("You have chosen to add GPS for $2.95 a day.\n Is that correct?(y/n)");
+                    confirm = scanner.nextLine();
+                    switch (confirm.toLowerCase()) {
+                        case "y":
+                            System.out.println("You have added the GPS.");
+                            gps = true;
+                            userInput = false;
+                            break;
+                        case "n":
+                            gps();
+                            break;
+
+                    }
+                    break;
+
+                case "n":
+                    System.out.println("You have chosen not to add GPS for $2.95 a day.\n Is that correct?(y/n)");
+                    confirm = scanner.nextLine();
+                    switch (confirm.toLowerCase()) {
+                        case "y":
+                            System.out.println("You have not added the GPS.");
+                            userInput = false;
+                            break;
+                        case "n":
+                            gps();
+                            break;
+                    }
+                    break;
+            }
+
+        }
+        return gps;
+    }
+
+    public static boolean roadside() {
+        Scanner scanner = new Scanner(System.in);
+        String confirm = "";
+        boolean roadSide = false;
+        boolean userInput = true;
+
+        while (userInput == true) {
+            //user enters pickup date
+            System.out.println("Would you like to add Roadside Assistance for $3.95 a day?(y/n) ");
+            confirm = scanner.nextLine();
+            switch (confirm.toLowerCase()) {
+                case "y":
+                    System.out.println("You have chosen to add Roadside Assistance for $3.95 a day.\n Is that correct?(y/n)");
+                    confirm = scanner.nextLine();
+                    switch (confirm.toLowerCase()) {
+                        case "y":
+                            System.out.println("You have added Roadside Assistance.");
+                            roadSide = true;
+                            userInput = false;
+                            break;
+                        case "n":
+                            roadside();
+                            break;
+
+                    }
+                    break;
+
+                case "n":
+                    System.out.println("You have chosen not to add Roadside Assistance for $3.95 a day.\n Is that correct?(y/n)");
+                    confirm = scanner.nextLine();
+                    switch (confirm.toLowerCase()) {
+                        case "y":
+                            System.out.println("You have not added Roadside Assistance.");
+                            userInput = false;
+                            break;
+                        case "n":
+                            roadside();
+                            break;
+                    }
+                    break;
+            }
+
+        }
+        return roadSide;
+
+    }
 }
+
+
