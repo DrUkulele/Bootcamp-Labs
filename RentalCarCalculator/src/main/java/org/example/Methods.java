@@ -32,7 +32,7 @@ public class Methods {
             System.out.println("Please enter how many days you want to rent the car.");
             daysToRent = scanner.nextInt();
             scanner.nextLine();
-            System.out.printf("You want to rent the car for %d. (y/n)\n", daysToRent);
+            System.out.printf("You want to rent the car for %d day(s). (y/n)\n", daysToRent);
             confirm = scanner.nextLine();
 
         }
@@ -52,7 +52,7 @@ public class Methods {
             confirm = scanner.nextLine();
             switch (confirm.toLowerCase()) {
                 case "y":
-                    System.out.println("You have chosen to add an electronic Toll Tag for $3.95 a day.\n Is that correct?(y/n)");
+                    System.out.println("You have chosen to add an electronic Toll Tag for $3.95 a day.\nIs that correct?(y/n)");
                     confirm = scanner.nextLine();
                     switch (confirm.toLowerCase()) {
                         case "y":
@@ -68,7 +68,7 @@ public class Methods {
                     break;
 
                 case "n":
-                    System.out.println("You have chosen not to add an electronic Toll Tag for $3.95 a day.\n Is that correct?(y/n)");
+                    System.out.println("You have chosen not to add an electronic Toll Tag for $3.95 a day.\nIs that correct?(y/n)");
                     confirm = scanner.nextLine();
                     switch (confirm.toLowerCase()) {
                         case "y":
@@ -99,7 +99,7 @@ public class Methods {
             confirm = scanner.nextLine();
             switch (confirm.toLowerCase()) {
                 case "y":
-                    System.out.println("You have chosen to add GPS for $2.95 a day.\n Is that correct?(y/n)");
+                    System.out.println("You have chosen to add GPS for $2.95 a day.\nIs that correct?(y/n)");
                     confirm = scanner.nextLine();
                     switch (confirm.toLowerCase()) {
                         case "y":
@@ -115,7 +115,7 @@ public class Methods {
                     break;
 
                 case "n":
-                    System.out.println("You have chosen not to add GPS for $2.95 a day.\n Is that correct?(y/n)");
+                    System.out.println("You have chosen not to add GPS for $2.95 a day.\nIs that correct?(y/n)");
                     confirm = scanner.nextLine();
                     switch (confirm.toLowerCase()) {
                         case "y":
@@ -146,7 +146,7 @@ public class Methods {
             confirm = scanner.nextLine();
             switch (confirm.toLowerCase()) {
                 case "y":
-                    System.out.println("You have chosen to add Roadside Assistance for $3.95 a day.\n Is that correct?(y/n)");
+                    System.out.println("You have chosen to add Roadside Assistance for $3.95 a day.\nIs that correct?(y/n)");
                     confirm = scanner.nextLine();
                     switch (confirm.toLowerCase()) {
                         case "y":
@@ -162,7 +162,7 @@ public class Methods {
                     break;
 
                 case "n":
-                    System.out.println("You have chosen not to add Roadside Assistance for $3.95 a day.\n Is that correct?(y/n)");
+                    System.out.println("You have chosen not to add Roadside Assistance for $3.95 a day.\nIs that correct?(y/n)");
                     confirm = scanner.nextLine();
                     switch (confirm.toLowerCase()) {
                         case "y":
@@ -206,8 +206,6 @@ public class Methods {
             System.out.printf("You are %d years old? (y/n)\n", ageNum);
             confirm = scanner.nextLine();
         }
-
-        System.out.println(age);
         return age;
     }
 }

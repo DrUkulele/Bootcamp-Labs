@@ -64,12 +64,12 @@ public class Main {
         }
         total = options + total;
 
-        System.out.printf("Your base rental charge is: %.2f\n", basicRental);
-        System.out.printf("Your optinal additions charge is: %.2f\n", options);
+        System.out.printf("Your base rental charge is: $%.2f\n", basicRental);
+        System.out.printf("Your optinal additions charge is: $%.2f\n", options);
         if (underAge == true) {
-            System.out.printf("You are under the age of 25. There is a surcharge of %.2f\n", surcharge);
+            System.out.printf("You are under the age of 25. There is a surcharge of: $%.2f\n", surcharge);
         }
-        System.out.printf("Your total is: %.2f", total);
+        System.out.printf("Your total is: $%.2f", total);
 
 
         //Do not comment out Main method }
