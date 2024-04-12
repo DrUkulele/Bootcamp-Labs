@@ -6,7 +6,7 @@ public class Methods {
     //intro screen
     public static void introScreen() {
         int calculatorOption;
-        System.out.println("Welcome to xyz financial organization\n Please pick one of the following calculators: ");
+        System.out.println("Welcome to xyz financial organization\nPlease pick one of the following calculators: ");
         System.out.println("1) Mortgage Calculator.\n2) Future Value Calculator. \n3) Ordinary Annuity Present Value Calculator.");
         System.out.print("Enter option number: ");
         int optionPicker = Methods.optionPicker();
@@ -29,6 +29,7 @@ public class Methods {
                 break;
             default:
                 System.out.println("You have entered an incorrect key please try again. ");
+                introScreen();
         }
     }
 
@@ -36,12 +37,11 @@ public class Methods {
     public static int optionPicker() {
         Scanner scanner = new Scanner(System.in);
         int optionChoice = scanner.nextInt();
-        ;
         return optionChoice;
     }
 
     //confirm to switch calculators
-    public static int calculatorSwitch(int option) {
+    public static void calculatorSwitch(int option) {
         int optionChoice;
         switch (option) {
             case 1:
@@ -87,7 +87,24 @@ public class Methods {
                 break;
             default:
         }
-        return 0;
 
     }
+    public static boolean continueMenu(){
+        System.out.println("\nContinue?\n1.) Yes\n2.) No\n");
+       int continueChoice = optionPicker();
+       boolean returnValue = false;
+        if(continueChoice == 1)
+            returnValue = true;
+        else if (continueChoice == 2) {
+            returnValue = false;
+        } else if (continueChoice != 1 && continueChoice != 2 ) {
+            System.out.println("You have entered an incorrect key please try again");
+            continueMenu();
+            
+
+        }
+        return returnValue;
+    }
 }
+
+
