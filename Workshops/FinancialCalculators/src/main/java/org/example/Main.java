@@ -32,8 +32,8 @@ public class Main {
         double decimalInterestRate = ((intrestRate / 12) / 100);
         double yearsInMonths = loanLength * 12;
         double monthlyPayment = principleAmount * (decimalInterestRate * Math.pow((1+ decimalInterestRate), yearsInMonths)) / (Math.pow((1+decimalInterestRate),yearsInMonths)-1);
-        double totalIntrest = (monthlyPayment * yearsInMonths) - principleAmount;
-        System.out.printf("Your monthly payment will be: %.2f\n Your total interest paid will be: %.2f.", monthlyPayment, totalIntrest);
+        double totalInterest = (monthlyPayment * yearsInMonths) - principleAmount;
+        System.out.printf("Your monthly payment will be: %.2f\n Your total interest paid will be: %.2f.", monthlyPayment, totalInterest);
 
     }
 

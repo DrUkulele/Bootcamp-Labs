@@ -9,7 +9,8 @@ public class Methods {
         System.out.println("Welcome to xyz financial organization\nPlease pick one of the following calculators: ");
         System.out.println("1) Mortgage Calculator.\n2) Future Value Calculator. \n3) Ordinary Annuity Present Value Calculator.");
         System.out.print("Enter option number: ");
-        int optionPicker = Methods.optionPicker();
+        Scanner scanner = new Scanner(System.in);
+        int optionPicker = scanner.nextInt();
 
         switch (optionPicker) {
             case 1:
@@ -33,66 +34,48 @@ public class Methods {
         }
     }
 
-    //option picker
-    public static int optionPicker() {
-        Scanner scanner = new Scanner(System.in);
-        int optionChoice = scanner.nextInt();
-        return optionChoice;
-    }
-
     //confirm to switch calculators
     public static void calculatorSwitch(int option) {
-        int optionChoice;
+        boolean optionChoice = Methods.continueMenu();
         switch (option) {
             case 1:
-                System.out.println("You have chosen the Mortgage calculator.\nContinue?\n1.) Yes\n2.) No");
-                optionChoice = Methods.optionPicker();
-
-                if (optionChoice == 2) {
+                System.out.println("You have chosen the Mortgage calculator.");
+                if (optionChoice == false) {
                     introScreen();
-                } else if (optionChoice == 1) {
+                }
+                else if (optionChoice == true){
                     Main.mortgage();
-                } else if (optionChoice != 1 && optionChoice != 2) {
-                    System.out.println("You have entered an incorrect key. Please try again.");
-                    calculatorSwitch(option);
                 }
                 break;
             case 2:
-                System.out.println("You have chosen the Future Value Calculator.\nContinue?\n1.) Yes\n2.) No");
-                optionChoice = Methods.optionPicker();
-
-                if (optionChoice == 2) {
+                System.out.println("You have chosen the Future Value Calculator.");
+                optionChoice = Methods.continueMenu();
+                if (optionChoice == false) {
                     introScreen();
-                } else if (optionChoice == 1) {
+                }
+                else
                     Main.futureValue();
-                } else if (optionChoice != 1 && optionChoice != 2) {
-                    System.out.println("You have entered an incorrect key. Please try again.");
-                    calculatorSwitch(option);
-                }
-
                 break;
+
             case 3:
-                System.out.println("You have chosen the Ordinary Annuity Present Value Calculator.\nContinue?\n1.) Yes\n2.) No");
-                optionChoice = Methods.optionPicker();
-
-                if (optionChoice == 2) {
+                System.out.println("You have chosen the Ordinary Annuity Present Value Calculator.");
+                optionChoice = Methods.continueMenu();
+                if (optionChoice == false) {
                     introScreen();
-                } else if (optionChoice == 1) {
-                    Main.presentValue();
-                } else if (optionChoice != 1 && optionChoice != 2) {
-                    System.out.println("You have entered an incorrect key. Please try again.");
-                    calculatorSwitch(option);
                 }
-
+                else
+                    Main.presentValue();
                 break;
+
             default:
         }
 
     }
     public static boolean continueMenu(){
-        System.out.println("\nContinue?\n1.) Yes\n2.) No\n");
-       int continueChoice = optionPicker();
-       boolean returnValue = false;
+        System.out.println("Continue?\n1.) Yes\n2.) No");
+        Scanner scanner = new Scanner(System.in);
+        int continueChoice = scanner.nextInt();
+       boolean returnValue;
         if(continueChoice == 1)
             returnValue = true;
         else if (continueChoice == 2) {
@@ -100,7 +83,7 @@ public class Methods {
         } else if (continueChoice != 1 && continueChoice != 2 ) {
             System.out.println("You have entered an incorrect key please try again");
             continueMenu();
-            
+
 
         }
         return returnValue;
