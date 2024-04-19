@@ -86,13 +86,15 @@ public class Screens {
     public static void checkInBook() {
         int loopCounter = 0;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter the Id of the book you want to checkin:");
+        System.out.println("Please enter the Id of the book you want to check in:");
         int bookCheckout = scanner.nextInt();
 
         String customerName = scanner.nextLine();
         for (Book book : books) {
             if (bookCheckout == book.getId()) {
+                System.out.println("Customer: " + book.getCheckedOutTo() + "\nChecked in: " + book.getTitle());
                 book.checkIn();
+
             }
             if(loopCounter == books.length){
                 System.out.println("Please enter a valid book ID.");
@@ -122,6 +124,7 @@ public class Screens {
         for (Book book : books) {
             if (bookCheckout == book.getId()) {
                 book.checkOut(customerName);
+                System.out.println("Customer: " + customerName + "\nChecked out: " + book.getTitle());
             }
             if(loopCounter == books.length){
                 System.out.println("Please enter a valid book ID.");

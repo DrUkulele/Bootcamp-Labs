@@ -4,26 +4,27 @@ import java.util.Arrays;
 
 public class Library {
     //array
-    static Book[] books = {new Book(1, "978-0-553-57340-9", "To Kill a Mockingbird"),
-            new Book(2, "978-0-312-85798-9", "1984"),
-            new Book(3, "978-0-440-53981-8", "The Catcher in the Rye"),
-            new Book(4, "978-0-8129-7647-9", "The Great Gatsby"),
-            new Book(5, "978-0-307-74314-4", "Pride and Prejudice"),
-            new Book(6, "978-0-7432-0169-4", "To Kill a Mockingbird"),
-            new Book(7, "978-0-7432-0169-4", "Harry Potter and the Sorcerer's Stone"),
-            new Book(8, "978-0-7432-0169-4", "The Hobbit"),
-            new Book(9, "978-0-7432-0169-4", "Animal Farm"),
-            new Book(10, "978-0-7432-0169-4", "Lord of the Flies"),
-            new Book(11, "978-0-7432-0169-4", "The Grapes of Wrath"),
-            new Book(12, "978-0-7432-0169-4", "Brave New World"),
-            new Book(13, "978-0-7432-0169-4", "Frankenstein"),
-            new Book(14, "978-0-7432-0169-4", "The Picture of Dorian Gray"),
-            new Book(15, "978-0-7432-0169-4", "Moby-Dick"),
-            new Book(16, "978-0-7432-0169-4", "War and Peace"),
-            new Book(17, "978-0-7432-0169-4", "Crime and Punishment"),
-            new Book(18, "978-0-7432-0169-4", "The Odyssey"),
-            new Book(19, "978-0-7432-0169-4", "The Lord of the Rings"),
-            new Book(20, "978-0-7432-0169-4", "Wuthering Heights")};
+    static Book[] books = {new Book(1, "978-3-16-148410-0", "Java Programming"),
+                           new Book(2, "978-1-23-456789-0", "Introduction to Algorithms"),
+                           new Book(3, "978-0-12-345678-9", "Data Structures and Algorithms in Java"),
+                           new Book(4, "978-0-99-829560-8", "Clean Code: A Handbook of Agile Software Craftsmanship"),
+                           new Book(5, "978-0-13-235088-4", "Head First Design Patterns"),
+                           new Book(6, "978-0-321-34970-8", "Effective Java"),
+                           new Book(7, "978-0-672-33618-7", "Learning Python"),
+                           new Book(8, "978-0-07-802212-8", "Operating System Concepts"),
+                           new Book(9, "978-0-321-87978-9", "Cracking the Coding Interview"),
+                           new Book(10, "978-0-201-63385-6", "Design Patterns: Elements of Reusable Object-Oriented Software"),
+                           new Book(11, "978-0-672-32955-9", "Python Crash Course"),
+                           new Book(12, "978-1-59327-552-9", "Automate the Boring Stuff with Python"),
+                           new Book(13, "978-0-596-52068-7", "Learning Perl"),
+                           new Book(14, "978-0-13-595705-9", "Computer Networking: A Top-Down Approach"),
+                           new Book(15, "978-1-449-34205-4", "Learning JavaScript Design Patterns"),
+                           new Book(16, "978-1-59327-614-4", "Eloquent JavaScript"),
+                           new Book(17, "978-0-321-58361-0", "Introduction to the Theory of Computation"),
+                           new Book(18, "978-0-201-36131-1", "Artificial Intelligence: A Modern Approach"),
+                           new Book(19, "978-1-4842-4213-1", "Deep Learning"),
+                           new Book(20, "978-0-672-33490-9", "C Programming Absolute Beginner's Guide")};
+
 
     //methods
     //get all books
@@ -42,7 +43,7 @@ public class Library {
                 counter++;
             }
         }
-        if(counter == 0){
+        if (counter == 0) {
             System.out.println("No books currently checked out.");
         }
     }
@@ -56,13 +57,13 @@ public class Library {
                 counter++;
             }
         }
-        if(counter == 0){
+        if (counter == 0) {
             System.out.println("No books currently checked in.");
         }
     }
 
     //get number of checked out books
-    public static void numberOfCheckedOutBooks(){
+    public static void numberOfCheckedOutBooks() {
         int numberCheckedOut = 0;
         for (Book book : books) {
             if (book.isCheckedOut()) {
@@ -71,8 +72,9 @@ public class Library {
         }
         System.out.println(numberCheckedOut);
     }
+
     //get number of checked in books
-    public static void numberOfCheckedInBooks(){
+    public static void numberOfCheckedInBooks() {
         int numberCheckedOut = 0;
         for (Book book : books) {
             if (book.isCheckedOut() == false) {
