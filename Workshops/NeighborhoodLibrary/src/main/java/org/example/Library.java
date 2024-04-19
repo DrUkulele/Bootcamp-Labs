@@ -61,8 +61,6 @@ public class Library {
         }
     }
 
-
-
     //get number of checked out books
     public static void numberOfCheckedOutBooks(){
         int numberCheckedOut = 0;

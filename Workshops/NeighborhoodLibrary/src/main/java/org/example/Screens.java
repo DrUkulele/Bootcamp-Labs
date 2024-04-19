@@ -69,6 +69,7 @@ public class Screens {
         switch (option) {
             case 1:
                 checkInBook();
+                homeScreen();
                 break;
             case 2:
                 System.out.println("Returning to Home Screen...");
