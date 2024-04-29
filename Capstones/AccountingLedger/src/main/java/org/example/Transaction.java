@@ -1,5 +1,6 @@
 package org.example;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -17,8 +18,8 @@ public class Transaction {
 
     //constructor
     public Transaction(String date, String time, String description, String vendor, double amount) {
-        this.date = LocalDate.now().format(fmtDate);
-        this.time = LocalTime.now().format(fmtTime);
+        this.date = date;
+        this.time = time;
         this.description = description;
         this.vendor = vendor;
         this.amount = amount;

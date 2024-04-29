@@ -1,14 +1,20 @@
 package org.example;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class FileManagement {
+    //decimal format for file writing
+    private static final DecimalFormat df = new DecimalFormat("0.00");
     //filepath for reader and writer since doing both from same file
     private static String filePath = "src/main/resources/transactions.csv";
+
     //file reader
-    public static List<Transaction> getTransactions(){
+    public static List<Transaction> readTransactionsFromFile(){
         //array list
         List<Transaction> transactions = new ArrayList<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
@@ -43,7 +49,7 @@ public class FileManagement {
         //must append to not overwrite file
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))){
             writer.newLine();
-            writer.write(transaction.getDate() + "|" + transaction.getTime() + "|" + transaction.getDescription() + "|" + transaction.getVendor() + "|" + transaction.getAmount());
+            writer.write(transaction.getDate() + "|" + transaction.getTime() + "|" + transaction.getDescription() + "|" + transaction.getVendor() + "|" + df.format(transaction.getAmount()));
             System.out.println("Transaction added.");
         }
         catch (IOException ex){
@@ -51,4 +57,74 @@ public class FileManagement {
         }
     }
 
+    //filtered display and display all methods
+
+    //all transactions sorted newest to oldest
+    public static void getAllTransactions(List<Transaction> transactions){
+        //sort transactions by newest first
+        Collections.sort(transactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                int dateComparison = t2.getDate().compareTo(t1.getDate());
+                if(dateComparison != 0){
+                    return dateComparison;
+                }
+
+                //if the dates are equal, compare the time values
+                return t2.getTime().compareTo(t1.getTime());
+            }
+        });
+
+        //print sorted transactions
+        for(Transaction transaction: transactions){
+            System.out.printf("%s %s %s %s %s\n",transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
+        }
+        System.out.println("All transactions displayed");
+    }
+
+    //only display deposits sorted newest to oldest
+    public static void getAllDeposits(List<Transaction> transactions){
+        //sort transactions by newest first
+        Collections.sort(transactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                int dateComparison = t2.getDate().compareTo(t1.getDate());
+                if(dateComparison != 0){
+                    return dateComparison;
+                }
+
+                //if the dates are equal, compare the time values
+                return t2.getTime().compareTo(t1.getTime());
+            }
+        });
+        for(Transaction transaction: transactions) {
+            if (transaction.getAmount() > 0) {
+                System.out.printf("%s %s %s %s %s\n", transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
+            }
+        }
+        System.out.println("All deposits displayed");
+    }
+
+    //only display payments sorted newest to oldest
+    public static void getAllPayments(List<Transaction> transactions){
+        //sort transactions by newest first
+        Collections.sort(transactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                int dateComparison = t2.getDate().compareTo(t1.getDate());
+                if(dateComparison != 0){
+                    return dateComparison;
+                }
+
+                //if the dates are equal, compare the time values
+                return t2.getTime().compareTo(t1.getTime());
+            }
+        });
+        for(Transaction transaction: transactions) {
+            if (transaction.getAmount() < 0) {
+                System.out.printf("%s %s %s %s %s\n", transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
+            }
+        }
+        System.out.println("All deposits displayed");
+    }
 }

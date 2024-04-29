@@ -36,7 +36,7 @@ public class Screens {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
-
+                System.out.println("---Add Deposit---");
                 Transaction deposit = new Transaction();
                 System.out.println("Please enter the following information.");
                 System.out.print("Deposit Description: ");
@@ -62,6 +62,7 @@ public class Screens {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
+                System.out.println("---Make Payment---");
                 Transaction payment = new Transaction();
                 System.out.println("Please enter the following information.");
                 System.out.print("Payment Description: ");
@@ -83,6 +84,49 @@ public class Screens {
     }
 
     private static void ledgerScreen() {
+        while(true){
+            System.out.println("""
+                    ---Ledger---
+                    1) Display all Transactions
+                    2) Display all Deposits
+                    3) Display all Payments
+                    4) Display filtered Reports
+                    5) Return to Home screen""");
+            switch (optionPicker()){
+                case "1":
+                    FileManagement.getAllTransactions(FileManagement.readTransactionsFromFile());
+                    break;
+                case "2":
+                    FileManagement.getAllDeposits(FileManagement.readTransactionsFromFile());
+                    break;
+                case "3":
+                    FileManagement.getAllPayments(FileManagement.readTransactionsFromFile());
+                    break;
+                case "4":
+                    break;
+                case "5":
+                    homeScreen();
+                    break;
+                default:
+                    System.out.println("Please choose form one of the options above.");
+                    break;
+
+            }
+        }
+
+    }
+
+    //sort by desired reports screen
+    public static void customReportsScreen(){
+        System.out.println("""
+                ---Reports---
+                1)
+                2)
+                3)
+                4)
+                5)
+                6) 
+                7) Return to Home screen""");
     }
 
     //helper methods for screens
