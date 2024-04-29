@@ -1,6 +1,7 @@
 package org.example;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 public class Screens {
@@ -103,6 +104,7 @@ public class Screens {
                     FileManagement.getAllPayments(FileManagement.readTransactionsFromFile());
                     break;
                 case "4":
+                    customReportsScreen();
                     break;
                 case "5":
                     homeScreen();
@@ -117,16 +119,48 @@ public class Screens {
     }
 
     //sort by desired reports screen
-    public static void customReportsScreen(){
-        System.out.println("""
-                ---Reports---
-                1)
-                2)
-                3)
-                4)
-                5)
-                6) 
-                7) Return to Home screen""");
+    public static void customReportsScreen() {
+        while (true) {
+            System.out.println("""
+                    ---Reports---
+                    1) Month To Date
+                    2) Previous Month
+                    3) Year To Date
+                    4) Previous Year
+                    5) Search by vendor
+                    6) Return to Ledger
+                    7) Return to Home screen""");
+            switch (optionPicker()){
+                case "1":
+                    List<Transaction> monthToDate = FileManagement.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "MonthToDate");
+                    FileManagement.printTransactions(monthToDate);
+                    break;
+                case "2":
+                    List<Transaction> previousMonth = FileManagement.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "PreviousMonth");
+                    FileManagement.printTransactions(previousMonth);
+                    break;
+                case "3":
+                    List<Transaction> yearToDate = FileManagement.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "YearToDate");
+                    FileManagement.printTransactions(yearToDate);
+                    break;
+                case "4":
+                    List<Transaction> previousYear = FileManagement.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "PreviousYear");
+                    FileManagement.printTransactions(previousYear);
+                    break;
+                case "5":
+                    FileManagement.searchByVendor(FileManagement.readTransactionsFromFile());
+                    break;
+                case "6":
+                    ledgerScreen();
+                    break;
+                case "7":
+                    homeScreen();
+                    break;
+                default:
+                    System.out.println("Please choose from one of the options above");
+                    break;
+            }
+        }
     }
 
     //helper methods for screens
@@ -139,30 +173,35 @@ public class Screens {
     }
 
     //allow user to stay on deposit screen
-    public static void addMoreDeposits(){
-        System.out.println("1) Add another deposit 2) Home screen");
-        switch (optionPicker()){
-            case "1":
-                break;
-            case "2":
-                homeScreen();
-                break;
-            default:
-                System.out.println("Please choose from one of the above options.");
+    public static void addMoreDeposits() {
+        while (true) {
+            System.out.println("1) Add another deposit 2) Home screen");
+            switch (optionPicker()) {
+                case "1":
+                    addDeposit();
+                    break;
+                case "2":
+                    homeScreen();
+                    break;
+                default:
+                    System.out.println("Please choose from one of the above options.");
+            }
         }
     }
-
     //allow user to stay on payments screen
-    public static void addMorePayments(){
-        System.out.println("1) Add another payment 2) Home screen");
-        switch (optionPicker()){
-            case "1":
-                break;
-            case "2":
-                homeScreen();
-                break;
-            default:
-                System.out.println("Please choose from one of the above options.");
+    public static void addMorePayments() {
+        while (true) {
+            System.out.println("1) Add another payment 2) Home screen");
+            switch (optionPicker()) {
+                case "1":
+                    makePayment();
+                    break;
+                case "2":
+                    homeScreen();
+                    break;
+                default:
+                    System.out.println("Please choose from one of the above options.");
+            }
         }
     }
 }

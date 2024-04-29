@@ -11,7 +11,7 @@ public class FakeDataTemp {
 
 
         public static void main(String[] args) {
-            List<String> transactions = generateFakeTransactions(20);
+            List<String> transactions = generateFakeTransactions(10);
             for (String transaction : transactions) {
                 System.out.println(transaction);
             }
@@ -22,7 +22,7 @@ public class FakeDataTemp {
             Random random = new Random();
             for (int i = 0; i < numTransactions; i++) {
                 // Generate a random date
-                LocalDate date = LocalDate.of(2023, random.nextInt(12) + 1, random.nextInt(28) + 1);
+                LocalDate date = LocalDate.of(2024, random.nextInt(04) + 1, random.nextInt(28) + 1);
 
                 // Generate a random time
                 LocalTime time = LocalTime.of(random.nextInt(24), random.nextInt(60), random.nextInt(60));
