@@ -1,20 +1,21 @@
 package org.example;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Screens {
     //screens
-    public static void homeScreen(){
-        while(true) {
+    public static void homeScreen() {
+        while (true) {
             System.out.println("""
                     ---Home Screen---
                     1) Add Deposit
                     2) Make Payment(Debit)
                     3) View Ledger
                     4) Exit""");
-            switch (optionPicker()){
+            switch (optionPicker()) {
                 case "1":
                     addDeposit();
                     break;
@@ -50,8 +51,7 @@ public class Screens {
                 deposit.setVendor(vendor);
                 deposit.setAmount(amount);
                 FileManagement.writeTransactionToFile(deposit);
-            }
-            catch(NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 System.out.println("Please enter the deposit amount in number format.");
             }
             addMoreDeposits();
@@ -76,8 +76,7 @@ public class Screens {
                 payment.setVendor(vendor);
                 payment.setAmount(amount);
                 FileManagement.writeTransactionToFile(payment);
-            }
-            catch(NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 System.out.println("Please enter the payment amount in number format.");
             }
             addMorePayments();
@@ -85,7 +84,7 @@ public class Screens {
     }
 
     private static void ledgerScreen() {
-        while(true){
+        while (true) {
             System.out.println("""
                     ---Ledger---
                     1) Display all Transactions
@@ -93,15 +92,18 @@ public class Screens {
                     3) Display all Payments
                     4) Display filtered Reports
                     5) Return to Home screen""");
-            switch (optionPicker()){
+            switch (optionPicker()) {
                 case "1":
-                    FileManagement.getAllTransactions(FileManagement.readTransactionsFromFile());
+                    List<Transaction> allTransactions = TransactionSort.getAllTransactions(FileManagement.readTransactionsFromFile());
+                    printTransactions(allTransactions);
                     break;
                 case "2":
-                    FileManagement.getAllDeposits(FileManagement.readTransactionsFromFile());
+                    List<Transaction> deposits = TransactionSort.getAllDeposits(FileManagement.readTransactionsFromFile());
+                    printTransactions(deposits);
                     break;
                 case "3":
-                    FileManagement.getAllPayments(FileManagement.readTransactionsFromFile());
+                    List<Transaction> withdraw = TransactionSort.getAllPayments(FileManagement.readTransactionsFromFile());
+                    printTransactions(withdraw);
                     break;
                 case "4":
                     customReportsScreen();
@@ -128,32 +130,37 @@ public class Screens {
                     3) Year To Date
                     4) Previous Year
                     5) Search by vendor
-                    6) Return to Ledger
-                    7) Return to Home screen""");
-            switch (optionPicker()){
+                    6) Custom search
+                    7) Return to Ledger
+                    8) Return to Home screen""");
+            switch (optionPicker()) {
                 case "1":
-                    List<Transaction> monthToDate = FileManagement.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "MonthToDate");
-                    FileManagement.printTransactions(monthToDate);
+                    List<Transaction> monthToDate = TransactionSort.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "MonthToDate");
+                    printTransactions(monthToDate);
                     break;
                 case "2":
-                    List<Transaction> previousMonth = FileManagement.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "PreviousMonth");
-                    FileManagement.printTransactions(previousMonth);
+                    List<Transaction> previousMonth = TransactionSort.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "PreviousMonth");
+                    printTransactions(previousMonth);
                     break;
                 case "3":
-                    List<Transaction> yearToDate = FileManagement.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "YearToDate");
-                    FileManagement.printTransactions(yearToDate);
+                    List<Transaction> yearToDate = TransactionSort.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "YearToDate");
+                    printTransactions(yearToDate);
                     break;
                 case "4":
-                    List<Transaction> previousYear = FileManagement.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "PreviousYear");
-                    FileManagement.printTransactions(previousYear);
+                    List<Transaction> previousYear = TransactionSort.getTransactionsByPeriod(FileManagement.readTransactionsFromFile(), "PreviousYear");
+                    printTransactions(previousYear);
                     break;
                 case "5":
-                    FileManagement.searchByVendor(FileManagement.readTransactionsFromFile());
+                    List<Transaction> vendorSort = TransactionSort.searchByVendor(FileManagement.readTransactionsFromFile());
+                    printTransactions(vendorSort);
                     break;
                 case "6":
-                    ledgerScreen();
+                    customReports();
                     break;
                 case "7":
+                    ledgerScreen();
+                    break;
+                case "8":
                     homeScreen();
                     break;
                 default:
@@ -161,6 +168,45 @@ public class Screens {
                     break;
             }
         }
+    }
+
+    //custom reports screen
+    public static void customReports() {
+        List<Transaction> customSearch = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter the following information: (Press enter to leave blank)");
+        System.out.print("Start Date(yyyy-mm-dd): ");
+        String startDate = scanner.nextLine();
+        if(startDate.equals("")){
+            startDate = null;
+        }
+        System.out.print("End Date(yyyy-mm-dd): ");
+        String endDate = scanner.nextLine();
+        if(endDate.equals("")){
+            endDate = null;
+        }
+        System.out.print("Description: ");
+        String description = scanner.nextLine();
+        System.out.print("Vendor: ");
+        String vendor = scanner.nextLine();
+        System.out.println("Amount range");
+        System.out.print("Maximum amount: ");
+        String maxAmountInput = scanner.nextLine();
+        System.out.print("Minimum amount: ");
+        String minAmountInput = scanner.nextLine();
+        Double minAmount = null;
+        Double maxAmount = null;
+        try {
+
+            if (!minAmountInput.isEmpty() && !maxAmountInput.isEmpty()) {
+                minAmount = Double.parseDouble(minAmountInput);
+                maxAmount = Double.parseDouble(maxAmountInput);
+            }
+        }
+        catch (NumberFormatException ex){
+            System.out.println("Please enter amounts in number format.");
+        }
+        printTransactions(TransactionSort.customSearch(FileManagement.readTransactionsFromFile(), startDate, endDate, description, vendor, minAmount, maxAmount));
     }
 
     //helper methods for screens
@@ -188,6 +234,7 @@ public class Screens {
             }
         }
     }
+
     //allow user to stay on payments screen
     public static void addMorePayments() {
         while (true) {
@@ -202,6 +249,20 @@ public class Screens {
                 default:
                     System.out.println("Please choose from one of the above options.");
             }
+        }
+    }
+
+    //print the transaction arrays
+    public static void printTransactions(List<Transaction> transactions) {
+        int transactioncount = 0;
+        for (Transaction transaction : transactions) {
+            System.out.printf("%s %s %s %s %s\n", transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
+            transactioncount++;
+        }
+        if (transactioncount == 0) {
+            System.out.println("No transactions found.");
+        } else {
+            System.out.printf("All %d transactions displayed\n", transactioncount);
         }
     }
 }
