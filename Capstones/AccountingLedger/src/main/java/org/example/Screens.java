@@ -1,7 +1,5 @@
 package org.example;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -172,17 +170,16 @@ public class Screens {
 
     //custom reports screen
     public static void customReports() {
-        List<Transaction> customSearch = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the following information: (Press enter to leave blank)");
         System.out.print("Start Date(yyyy-mm-dd): ");
         String startDate = scanner.nextLine();
-        if(startDate.equals("")){
+        if(startDate.isEmpty()){
             startDate = null;
         }
         System.out.print("End Date(yyyy-mm-dd): ");
         String endDate = scanner.nextLine();
-        if(endDate.equals("")){
+        if(endDate.isEmpty()){
             endDate = null;
         }
         System.out.print("Description: ");
@@ -214,8 +211,7 @@ public class Screens {
     //option picking method returns string for scanner.nextLine()
     public static String optionPicker() {
         Scanner scanner = new Scanner(System.in);
-        String optionChoice = scanner.nextLine();
-        return optionChoice;
+        return scanner.nextLine();
     }
 
     //allow user to stay on deposit screen
@@ -254,15 +250,15 @@ public class Screens {
 
     //print the transaction arrays
     public static void printTransactions(List<Transaction> transactions) {
-        int transactioncount = 0;
+        int transactionCount = 0;
         for (Transaction transaction : transactions) {
             System.out.printf("%s %s %s %s %s\n", transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
-            transactioncount++;
+            transactionCount++;
         }
-        if (transactioncount == 0) {
+        if (transactionCount == 0) {
             System.out.println("No transactions found.");
         } else {
-            System.out.printf("All %d transactions displayed\n", transactioncount);
+            System.out.printf("All %d transactions displayed\n", transactionCount);
         }
     }
 }
