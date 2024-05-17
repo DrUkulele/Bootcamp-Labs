@@ -363,7 +363,7 @@ public class UserInterface {
                 case 1:
                     ContractFileManager.saveContracts(contract);
                     dealership.removeVehicle(vin);
-                    System.out.println("Vehicle Sold;");
+                    System.out.println("Vehicle Sold!");
                     break;
                 case 2:
                     System.out.println("Contract Canceled. Returning to home screen.");
@@ -381,7 +381,7 @@ public class UserInterface {
                 case 1:
                     ContractFileManager.saveContracts(contract);
                     dealership.removeVehicle(vin);
-                    System.out.println("Vehicle Sold;");
+                    System.out.println("Vehicle Leased!");
                     break;
                 case 2:
                     System.out.println("Contract Canceled. Returning to home screen.");
