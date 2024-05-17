@@ -76,32 +76,34 @@ public class SalesContract extends Contract {
 
     @Override
     public BigDecimal getMonthlyPayment() {
-        MathContext mathContextDenominator = new MathContext(10, RoundingMode.HALF_UP);
-        MathContext mathContextMonthlyInterest = new MathContext(10, RoundingMode.FLOOR);
-        var carPrice = getVehicleSold().getPrice();
-        BigDecimal monthlyInterestRate = getInterestRate().divide(BigDecimal.valueOf(12), mathContextMonthlyInterest);
-        BigDecimal one = new BigDecimal("1");
-        int loanTerm;
-        BigDecimal denominator;
+        if (finance == true) {
+            MathContext mathContextDenominator = new MathContext(10, RoundingMode.HALF_UP);
+            MathContext mathContextMonthlyInterest = new MathContext(10, RoundingMode.FLOOR);
+            var carPrice = getVehicleSold().getPrice();
+            BigDecimal monthlyInterestRate = getInterestRate().divide(BigDecimal.valueOf(12), mathContextMonthlyInterest);
+            BigDecimal one = new BigDecimal("1");
+            int loanTerm;
+            BigDecimal denominator;
 
 
-        if(BigDecimal.valueOf(carPrice).compareTo(BigDecimal.valueOf(10000)) >= 0) { //
-            loanTerm = 48;
+            if (BigDecimal.valueOf(carPrice).compareTo(BigDecimal.valueOf(10000)) >= 0) { //
+                loanTerm = 48;
 
+            } else {
+                loanTerm = 24;
+            }
+
+            denominator = one.add(monthlyInterestRate).pow(-loanTerm, mathContextDenominator);
+
+            //Monthly payment = (loan amount) × (interest rate / 12) / (1 − (1 + (interest rate / 12)) ^ (-loan term)).
+            monthlyPayment = (BigDecimal.valueOf(carPrice) // (loan amount)
+                    .multiply(monthlyInterestRate //× (interest rate / 12)
+                            .divide(one.subtract(denominator), RoundingMode.HALF_DOWN)));// / (1 − (1 + (interest rate / 12)) ^ (-loan term))
+
+            return monthlyPayment = monthlyPayment.setScale(2, RoundingMode.HALF_UP);
         }
-        else{
-            loanTerm = 24;
-        }
-
-        denominator = one.add(monthlyInterestRate).pow(-loanTerm, mathContextDenominator );
-
-        //Monthly payment = (loan amount) × (interest rate / 12) / (1 − (1 + (interest rate / 12)) ^ (-loan term)).
-        monthlyPayment = (BigDecimal.valueOf(carPrice) // (loan amount)
-                .multiply(monthlyInterestRate //× (interest rate / 12)
-                        .divide(one.subtract(denominator), RoundingMode.HALF_DOWN)));// / (1 − (1 + (interest rate / 12)) ^ (-loan term))
-
-        return monthlyPayment = monthlyPayment.setScale(2, RoundingMode.HALF_UP);
+        else
+            return BigDecimal.valueOf(0);
     }
-
 
 }
