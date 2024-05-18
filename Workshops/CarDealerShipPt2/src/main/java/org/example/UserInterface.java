@@ -9,12 +9,11 @@ public class UserInterface {
     private static final Scanner scanner = new Scanner(System.in);
     private static Dealership dealership;
 
-    public static Dealership getDealership() {
+    public static Dealership getDealership() { dealership = DealershipFileManager.getDealership();
         return dealership;
     }
 
     public static void userInterface() {
-        dealership = DealershipFileManager.getDealership();
         System.out.println("Hello and Welcome to your " + dealership.getName() + " Dealership!");
 
         while (true) {
