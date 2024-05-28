@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,11 +8,14 @@ public class UserInterface {
     private static final Scanner scanner = new Scanner(System.in);
     private static Sandwich sandwich;
     private static Menu menu;
+    private static Cart cart;
 
     static {
         menu = new Menu();
-        sandwich = new Sandwich(null, null, null, null, null, null, null, false);
+        sandwich = new Sandwich();
+        cart = new Cart();
     }
+
     //getters and setters
     private Sandwich getSandwich() {
         return sandwich;
@@ -43,6 +44,7 @@ public class UserInterface {
                         2) Exit""");
                 switch (optionPicker()) {
                     case 1:
+                        cart.clearCart();
                         orderScreen();
                         break;
                     case 2:
@@ -82,7 +84,8 @@ public class UserInterface {
                         checkoutScreen();
                         break;
                     case 0:
-                        //cancel order  method
+                        cart.clearCart();
+                        System.out.println("Order canceled");
                         break;
                     default:
                         break;
@@ -106,7 +109,7 @@ public class UserInterface {
                 while (true) {
                     try {
                         System.out.println("---Sandwich size---");
-                        display(menu.getSizeList());
+                        displayWithNumbers(menu.getSizeList());
                         sandwich.setSize(Sandwich.pickItemNoQuantity(menu.getSizeList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
@@ -118,7 +121,7 @@ public class UserInterface {
                 while (true) {
                     try {
                         System.out.println("---Bread---");
-                        display(menu.getBreadList());
+                        displayWithNumbers(menu.getBreadList());
                         sandwich.setBread(Sandwich.pickItemNoQuantity(menu.getBreadList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
@@ -130,7 +133,7 @@ public class UserInterface {
                 while (true) {
                     try {
                         System.out.println("---Meat---");
-                        display(menu.getMeatList());
+                        displayWithNumbers(menu.getMeatList());
                         sandwich.setMeat(Sandwich.pickItemWithQuantity(menu.getMeatList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
@@ -142,7 +145,7 @@ public class UserInterface {
                 while (true) {
                     try {
                         System.out.println("---Cheese---");
-                        display(menu.getCheeseList());
+                        displayWithNumbers(menu.getCheeseList());
                         sandwich.setCheese(Sandwich.pickItemWithQuantity(menu.getCheeseList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
@@ -154,7 +157,7 @@ public class UserInterface {
                 while (true) {
                     try {
                         System.out.println("---Other Toppings---");
-                        display(menu.getOtherToppingsList());
+                        displayWithNumbers(menu.getOtherToppingsList());
                         sandwich.setOtherToppings(Sandwich.pickItemWithQuantity(menu.getOtherToppingsList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
@@ -166,7 +169,7 @@ public class UserInterface {
                 while (true) {
                     try {
                         System.out.println("---Sauces---");
-                        display(menu.getSaucesList());
+                        displayWithNumbers(menu.getSaucesList());
                         sandwich.setSauces(Sandwich.pickItemWithQuantity(menu.getSaucesList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
@@ -178,7 +181,7 @@ public class UserInterface {
                 while (true) {
                     try {
                         System.out.println("---Sides---");
-                        display(menu.getSidesList());
+                        displayWithNumbers(menu.getSidesList());
                         sandwich.setSides(Sandwich.pickItemWithQuantity(menu.getSidesList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
@@ -217,6 +220,7 @@ public class UserInterface {
                 sandwich = new Sandwich(sandwich.getSize(), sandwich.getBread(), sandwich.getMeat(),
                         sandwich.getCheese(), sandwich.getOtherToppings(), sandwich.getSauces(),
                         sandwich.getSides(), sandwich.isToasted());
+                cart.addSandwich(sandwich);
 
                 // If all steps are successful, exit the method
                 break;
@@ -226,84 +230,106 @@ public class UserInterface {
         }
     }
 
-//method to add drinks to the order
-private static void addDrinkScreen() {
-    while (true) {
-        try {
-            System.out.println("---Drinks---");
-            System.out.println("Please choose drink size: ");
-            //display size drink size array
-            //allow user to pick from drink array for size
-            System.out.println("Please choose drink flavor: ");
-            //display drink flavor array
-            //allow user to pick from drink array for flavor
-            System.out.println("Please enter quantity: ");
-            int quantity = Integer.parseInt(scanner.nextLine());
-            //add drink size, flavor and quantity to order
-        } catch (Exception ex) {
-            System.out.println("ADD ERROR MESSAGE HERE!");
-        }
-    }
-}
-
-//method to add chips to order
-private static void addChipsScreen() {
-    while (true) {
-        try {
-            System.out.println("---Chips---");
-            System.out.println("Please choose chip type: ");
-            //display chip type array
-            //allow user to pick from chip type array
-            System.out.println("Please enter quantity: ");
-            int quantity = Integer.parseInt(scanner.nextLine());
-            //add chip quantity to order quantity to order
-        } catch (Exception ex) {
-            System.out.println("ADD ERROR MESSAGE HERE!");
-
-        }
-    }
-}
-
-//checkoutMethod
-private static void checkoutScreen() {
-    while (true) {
-        try {
-            System.out.println("---CheckOut---");
-            //display the order back to user
-            //display the total of the order
-            System.out.println("""
-                    1) Confirm
-                    2) Cancel""");
-            switch (optionPicker()) {
-                case 1:
-                    //confirm order by writing the receipt as a new file and then return to home screen
-                    break;
-                case 2:
-                    //call method to cancel order
-                    break;
-                default:
-                    break;
+    //method to add drinks to the order
+    private static void addDrinkScreen() {
+        while (true) {
+            try {
+                System.out.println("---Drinks---");
+                System.out.println("Please choose drink size: ");
+                displayWithNumbers(menu.getDrinkSizes()); //display size drink size array
+                String size = Menu.pickItemFromArray(menu.getDrinkSizes());//allow user to pick from drink array for size
+                System.out.println("Please choose drink flavor: ");
+                displayWithNumbers(menu.getDrinkFlavors());//display drink flavor array
+                String flavor = Menu.pickItemFromArray(menu.getDrinkFlavors()); //allow user to pick from drink array for flavor
+                System.out.println("Please enter quantity: ");
+                int quantity = Integer.parseInt(scanner.nextLine());
+                //add drink size, flavor and quantity to order
+                for (int i = 0; i < quantity; i++) {
+                    Drink drink = new Drink(size, flavor);
+                    cart.addDrink(drink);
+                }
+                break;
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE!");
             }
-        } catch (Exception ex) {
-            System.out.println("ADD ERROR MESSAGE HERE!");
         }
     }
-}
 
+    //method to add chips to order
+    private static void addChipsScreen() {
+        while (true) {
+            try {
+                System.out.println("---Chips---");
+                System.out.println("Please choose chip type: ");
+                displayWithNumbers(menu.getChipTypes());  //display chip type array
+                String type = Menu.pickItemFromArray(menu.getChipTypes());//allow user to pick from chip type array
+                System.out.println("Please enter quantity: ");
+                int quantity = Integer.parseInt(scanner.nextLine());
+                //add chip quantity to order quantity to order
+                for (int i = 0; i < quantity; i++) {
+                    Chip chip = new Chip(type);
+                    cart.addChip(chip);
+                }
+                break;
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE!");
 
-//helper methods
-//option picker return an int to signify what number option was picked
-private static int optionPicker() {
-    return Integer.parseInt(scanner.nextLine());
-}
-
-//method to display any array list given to it. In this case bread, meat, cheese, ect
-public static <T> void display(List<T> list) {
-    for (int i = 0; i < list.size(); i++) {
-        T item = list.get(i);
-        System.out.println((i + 1) + ") " + item);
+            }
+        }
     }
-}
 
+    //checkoutMethod
+    private static void checkoutScreen() {
+        while (true) {
+           // try {
+                System.out.println("---CheckOut---");
+                //display the order back to user
+            if(cart.getSandwiches() != null) {
+                displayList(cart.getSandwiches());
+            }
+                displayList(cart.getDrinks());
+                displayList(cart.getChips());
+                //display the total of the order
+                System.out.println(cart.getTotalPrice());
+                System.out.println("""
+                        1) Confirm
+                        2) Cancel""");
+                switch (optionPicker()) {
+                    case 1:
+                        //confirm order by writing the receipt as a new file and then return to home screen
+                        break;
+                    case 2:
+                        cart.clearCart();
+                        System.out.println("Order canceled.");
+                        break;
+                    default:
+                        break;
+                }
+                break;
+           // } catch (Exception ex) {
+               // System.out.println("ADD ERROR MESSAGE HERE!");
+          //  }
+        }
+    }
+
+
+    //helper methods
+//option picker return an int to signify what number option was picked
+    private static int optionPicker() {
+        return Integer.parseInt(scanner.nextLine());
+    }
+
+    //method to display any array list given to it. In this case bread, meat, cheese, ect
+    public static <T> void displayWithNumbers(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            T item = list.get(i);
+            System.out.println((i + 1) + ") " + item);
+        }
+    }
+    public static <T> void displayList(List<T> list) {
+        for (T someList : list) {
+            System.out.println(someList);
+        }
+    }
 }
 
