@@ -6,22 +6,26 @@ import java.util.List;
 
 public class Cart {
     //properties
-    private BigDecimal totalPrice = BigDecimal.valueOf(0);
-    private List<Sandwich> sandwiches = new ArrayList<>();
-    private List<Drink> drinks = new ArrayList<>();
-    private List<Chip> chips = new ArrayList<>();
+    private static BigDecimal totalPrice = BigDecimal.valueOf(0);
+    private static List<Sandwich> sandwiches = new ArrayList<>();
+    private static List<Drink> drinks = new ArrayList<>();
+    private static List<Chip> chips = new ArrayList<>();
 
+
+    public static BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
 
     //methods
-    public BigDecimal getTotalPrice(){
+    public static BigDecimal getNewTotalPrice(){
         for (Sandwich sandwich : sandwiches){
-            totalPrice = totalPrice.add(sandwich.getTotalSandwichPrice(sandwich));
+            totalPrice = totalPrice.add(sandwich.getTotal());
         }
         for (Drink drink : drinks){
-            totalPrice = totalPrice.add(drink.getDrinkPrice(drink));
+            totalPrice = totalPrice.add(drink.getDrinkPrice());
         }
         for (Chip chip : chips)
-            totalPrice = totalPrice.add(chip.getChipPrice(chip));
+            totalPrice = totalPrice.add(chip.getPrice());
         return totalPrice;
     }
 

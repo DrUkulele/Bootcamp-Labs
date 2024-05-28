@@ -1,5 +1,7 @@
 package org.example;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,6 +11,7 @@ public class UserInterface {
     private static Sandwich sandwich;
     private static Menu menu;
     private static Cart cart;
+    private static boolean newOrder = true;
 
     static {
         menu = new Menu();
@@ -62,41 +65,47 @@ public class UserInterface {
 
     //order screen
     private static void orderScreen() {
-        while (true) {
-            try {
-                System.out.println("""
-                        1) Add Sandwich
-                        2) Add Drink
-                        3) Add Chips
-                        4) Checkout
-                        0) Cancel Order""");
-                switch (optionPicker()) {
-                    case 1:
-                        addSandwichScreen();
-                        break;
-                    case 2:
-                        addDrinkScreen();
-                        break;
-                    case 3:
-                        addChipsScreen();
-                        break;
-                    case 4:
-                        checkoutScreen();
-                        break;
-                    case 0:
-                        cart.clearCart();
-                        System.out.println("Order canceled");
-                        break;
-                    default:
-                        break;
+        if (newOrder = true) {
+            while (true) {
+                try {
+                    System.out.println("""
+                            1) Add Sandwich
+                            2) Add Drink
+                            3) Add Chips
+                            4) Checkout
+                            0) Cancel Order""");
+                    switch (optionPicker()) {
+                        case 1:
+                            addSandwichScreen();
+                            break;
+                        case 2:
+                            addDrinkScreen();
+                            break;
+                        case 3:
+                            addChipsScreen();
+                            break;
+                        case 4:
+                            checkoutScreen();
+                            newOrder = false;
+                            continue;
+                        case 0:
+                            cart.clearCart();
+                            System.out.println("Order canceled");
+                            newOrder = false;
+                            break;
+                        default:
+                            break;
+                    }
+                    continue;
+                } catch (Exception ex) {
+                    System.out.println("Please enter option as a number.");
+
                 }
-            } catch (Exception ex) {
-                System.out.println("Please enter option as a number.");
+                break;
 
             }
 
         }
-
     }
 
     //method to add a sandwich calling the sandwich builder class to build the sandwich
@@ -134,7 +143,7 @@ public class UserInterface {
                     try {
                         System.out.println("---Meat---");
                         displayWithNumbers(menu.getMeatList());
-                        sandwich.setMeat(Sandwich.pickItemWithQuantity(menu.getMeatList()));
+                        sandwich.setExtraMeat(sandwich.pickItemWithQuantity(menu.getMeatList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
                         System.out.println("Error selecting meat: " + ex.getMessage());
@@ -146,7 +155,7 @@ public class UserInterface {
                     try {
                         System.out.println("---Cheese---");
                         displayWithNumbers(menu.getCheeseList());
-                        sandwich.setCheese(Sandwich.pickItemWithQuantity(menu.getCheeseList()));
+                        sandwich.setExtraCheese(sandwich.pickItemWithQuantity(menu.getCheeseList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
                         System.out.println("Error selecting cheese: " + ex.getMessage());
@@ -158,7 +167,7 @@ public class UserInterface {
                     try {
                         System.out.println("---Other Toppings---");
                         displayWithNumbers(menu.getOtherToppingsList());
-                        sandwich.setOtherToppings(Sandwich.pickItemWithQuantity(menu.getOtherToppingsList()));
+                        sandwich.setOtherToppings(sandwich.pickItemWithQuantity(menu.getOtherToppingsList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
                         System.out.println("Error selecting other toppings: " + ex.getMessage());
@@ -170,7 +179,7 @@ public class UserInterface {
                     try {
                         System.out.println("---Sauces---");
                         displayWithNumbers(menu.getSaucesList());
-                        sandwich.setSauces(Sandwich.pickItemWithQuantity(menu.getSaucesList()));
+                        sandwich.setSauces(sandwich.pickItemWithQuantity(menu.getSaucesList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
                         System.out.println("Error selecting sauces: " + ex.getMessage());
@@ -182,7 +191,7 @@ public class UserInterface {
                     try {
                         System.out.println("---Sides---");
                         displayWithNumbers(menu.getSidesList());
-                        sandwich.setSides(Sandwich.pickItemWithQuantity(menu.getSidesList()));
+                        sandwich.setSides(sandwich.pickItemWithQuantity(menu.getSidesList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
                         System.out.println("Error selecting sides: " + ex.getMessage());
@@ -218,8 +227,8 @@ public class UserInterface {
 
                 // Creating a new sandwich object
                 sandwich = new Sandwich(sandwich.getSize(), sandwich.getBread(), sandwich.getMeat(),
-                        sandwich.getCheese(), sandwich.getOtherToppings(), sandwich.getSauces(),
-                        sandwich.getSides(), sandwich.isToasted());
+                        sandwich.getCheese(), sandwich.getExtraMeat(), sandwich.getExtraCheese(), sandwich.getOtherToppings(), sandwich.getSauces(),
+                        sandwich.getSides(), sandwich.isToasted(), sandwich.getTotalSandwichPrice(sandwich));
                 cart.addSandwich(sandwich);
 
                 // If all steps are successful, exit the method
@@ -281,22 +290,26 @@ public class UserInterface {
     //checkoutMethod
     private static void checkoutScreen() {
         while (true) {
-           // try {
+           try {
                 System.out.println("---CheckOut---");
                 //display the order back to user
-            if(cart.getSandwiches() != null) {
+            if(cart.getSandwiches() != null || !cart.getSandwiches().isEmpty()) {
                 displayList(cart.getSandwiches());
             }
-                displayList(cart.getDrinks());
-                displayList(cart.getChips());
+               if(cart.getDrinks() != null || !cart.getDrinks().isEmpty()) {
+                   displayList(cart.getDrinks());
+               }
+               if(cart.getChips() != null || !cart.getChips().isEmpty()) {
+                   displayList(cart.getChips());
+               }
                 //display the total of the order
-                System.out.println(cart.getTotalPrice());
+                System.out.println(formatDescription("Total: ", Cart.getNewTotalPrice(), 20) );
                 System.out.println("""
                         1) Confirm
                         2) Cancel""");
                 switch (optionPicker()) {
                     case 1:
-                        //confirm order by writing the receipt as a new file and then return to home screen
+                        FileManager.writeReceipt(cart.getSandwiches(), cart.getDrinks(), cart.getChips());
                         break;
                     case 2:
                         cart.clearCart();
@@ -306,9 +319,11 @@ public class UserInterface {
                         break;
                 }
                 break;
-           // } catch (Exception ex) {
-               // System.out.println("ADD ERROR MESSAGE HERE!");
-          //  }
+           } catch (Exception ex) {
+               System.out.println("ADD ERROR MESSAGE HERE!");
+           }
+
+
         }
     }
 
@@ -330,6 +345,14 @@ public class UserInterface {
         for (T someList : list) {
             System.out.println(someList);
         }
+    }
+    private static String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
+
+        // Calculate the adjusted width by adding additional spaces to maxDescriptionLength
+        int adjustedWidth = 50 - maxDescriptionLength;
+
+        // Format the description and price with the adjusted width
+        return String.format("%-" + adjustedWidth + "s $%.2f", description, price.setScale(2, RoundingMode.HALF_UP));
     }
 }
 

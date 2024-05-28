@@ -44,7 +44,7 @@ class Testing {
         sidesMap.put("Chips", 1);
 
         // Create a sandwich object
-        Sandwich mySandwich = new Sandwich(sandwichSize, "Wheat", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
+        Sandwich mySandwich = new Sandwich(sandwichSize, "Wheat", "Ham", "Cheddar", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
 
         assertEquals(expected, mySandwich.getTotalSandwichPrice(mySandwich));
 
@@ -74,8 +74,8 @@ class Testing {
         sidesMap.put("Chips", 1);
 
         // Create a sandwich object
-        Sandwich mySandwich = new Sandwich("4 in", "Wheat", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
-        Sandwich mySandwich2 = new Sandwich("8 in", "Ry3", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
+        Sandwich mySandwich = new Sandwich("4 in", "Wheat", "Ham", "Cheddar", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
+        Sandwich mySandwich2 = new Sandwich("8 in", "Ry3", "Ham", "Cheddar", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
 
         List<Sandwich> expected = new ArrayList<>(Arrays.asList(mySandwich, mySandwich2));
 
@@ -111,8 +111,8 @@ class Testing {
         sidesMap.put("Chips", 1);
 
         // Create a sandwich object
-        Sandwich mySandwich = new Sandwich(sandwichSize, "Wheat", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
-        Sandwich mySandwich2 = new Sandwich("8 in", "Rye", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true); // price of sandwich 12.50
+        Sandwich mySandwich = new Sandwich(sandwichSize, "Wheat", "Ham", "Cheddar", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
+        Sandwich mySandwich2 = new Sandwich("8 in", "Rye", "Ham", "Cheddar", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true); // price of sandwich 12.50
 
         cart.addSandwich(mySandwich);
         cart.addSandwich(mySandwich2);
@@ -130,11 +130,11 @@ class Testing {
 
         // Create HashMaps for toppings
         HashMap<String, Integer> meatMap = new HashMap<>();
-        meatMap.put("Ham", 1);
+        meatMap.put("Ham", 2);
 
 
         HashMap<String, Integer> cheeseMap = new HashMap<>();
-        cheeseMap.put("Cheddar", 1);
+        cheeseMap.put("Cheddar", 2);
 
         HashMap<String, Integer> otherToppingsMap = new HashMap<>();
         otherToppingsMap.put("Lettuce", 2);
@@ -150,8 +150,8 @@ class Testing {
 
 
         // Create a sandwich object
-        Sandwich mySandwich = new Sandwich("4 in", "Wheat", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
-        Sandwich mySandwich2 = new Sandwich("12 in", "Rye", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, false);
+        Sandwich mySandwich = new Sandwich("4 in", "Wheat", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
+        Sandwich mySandwich2 = new Sandwich("12 in", "Rye", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, false);
         Drink drink = new Drink("Small", "Cola");
         Chip chip = new Chip("Salt and Vinegar");
 
@@ -162,5 +162,41 @@ class Testing {
         UserInterface.displayList(sandwiches);
         UserInterface.displayList(drinks);
         UserInterface.displayList(chips);
+    }
+
+    @Test
+    public void giveSandwich_writeToFile(){
+        Cart cart = new Cart();
+        // Create HashMaps for toppings
+        HashMap<String, Integer> meatMap = new HashMap<>();
+        meatMap.put("Ham", 2);
+
+
+        HashMap<String, Integer> cheeseMap = new HashMap<>();
+        cheeseMap.put("Cheddar", 2);
+
+        HashMap<String, Integer> otherToppingsMap = new HashMap<>();
+        otherToppingsMap.put("Lettuce", 2);
+        otherToppingsMap.put("Tomato", 1);
+
+        HashMap<String, Integer> saucesMap = new HashMap<>();
+        saucesMap.put("Mayo", 1);
+        saucesMap.put("Mustard", 1);
+
+        HashMap<String, Integer> sidesMap = new HashMap<>();
+        sidesMap.put("Chips", 1);
+
+
+
+        // Create a sandwich object
+        Sandwich mySandwich = new Sandwich("4 in", "Wheat", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
+        Sandwich mySandwich2 = new Sandwich("12 in", "Rye", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, false);
+        Drink drink = new Drink("Medium", "Cola");
+        Chip chip = new Chip("Salt and Vinegar");
+
+        List<Sandwich> sandwiches = new ArrayList<>(){{add(mySandwich); add(mySandwich2);}};
+        List<Drink> drinks = new ArrayList<>(){{add(drink);}};
+        List<Chip> chips = new ArrayList<>(){{add(chip);}};
+        FileManager.writeReceipt(sandwiches,drinks, chips);
     }
 }
