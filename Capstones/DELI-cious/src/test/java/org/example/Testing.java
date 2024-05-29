@@ -22,7 +22,7 @@ class Testing {
 
     @ParameterizedTest
     //sandwich size, num of meat, num of cheese, expected
-    @CsvSource({"8 in, 3, 1 , 12.50", "4 in, 5, 3, 9.85", "12 in, 10, 22, 46.15", "12 in, 101, 101, 253.75"})
+    @CsvSource({"8 in, 2, 1 , 13.10", "4 in, 5, 3, 10.65", "12 in, 10, 22, 48.55", "12 in, 101, 101, 256.15"})
     public void giveSandwich_ReturnPrice(String sandwichSize, int numOfMeat, int numOfCheese, BigDecimal expected) {
         // Create HashMaps for toppings
         HashMap<String, Integer> meatMap = new HashMap<>();
@@ -46,7 +46,7 @@ class Testing {
         // Create a sandwich object
         Sandwich mySandwich = new Sandwich(sandwichSize, "Wheat", "Ham", "Cheddar", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
 
-        assertEquals(expected, mySandwich.getTotalSandwichPrice(mySandwich));
+        assertEquals(expected, mySandwich.getTotalSandwichPrice());
 
     }
 
@@ -87,9 +87,11 @@ class Testing {
 
     @ParameterizedTest
     //sandwich size, num of meat, num of cheese, expected
-    @CsvSource({"8 in, 3, 1 , 12.50", "4 in, 5, 3, 9.85", "12 in, 10, 22, 46.15", "12 in, 101, 101, 253.75"})
+    @CsvSource({"8 in, 2, 1 , 13.10", "4 in, 5, 3, 10.65", "12 in, 10, 22, 48.55", "12 in, 101, 101, 256.15"})
+
     public void addSandwiches_getTotalPrice(String sandwichSize, int numOfMeat, int numOfCheese, BigDecimal priceOfSandwich) {
         Cart cart = new Cart();
+        Sandwich sandwich = new Sandwich();
 
         // Create HashMaps for toppings
         HashMap<String, Integer> meatMap = new HashMap<>();
@@ -117,7 +119,7 @@ class Testing {
         cart.addSandwich(mySandwich);
         cart.addSandwich(mySandwich2);
 
-        BigDecimal expected = mySandwich2.getTotalSandwichPrice(mySandwich2).add(mySandwich.getTotalSandwichPrice(mySandwich));
+        BigDecimal expected = mySandwich2.getTotalSandwichPrice().add(mySandwich.getTotalSandwichPrice());
 
         BigDecimal price = cart.getTotalPrice();
 
@@ -152,8 +154,8 @@ class Testing {
         // Create a sandwich object
         Sandwich mySandwich = new Sandwich("4 in", "Wheat", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
         Sandwich mySandwich2 = new Sandwich("12 in", "Rye", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, false);
-        Drink drink = new Drink("Small", "Cola");
-        Chip chip = new Chip("Salt and Vinegar");
+        Drink drink = new Drink("Small", "Cola", 1);
+        Chip chip = new Chip("Salt and Vinegar", 1);
 
         List<Sandwich> sandwiches = new ArrayList<>(){{add(mySandwich); add(mySandwich2);}};
         List<Drink> drinks = new ArrayList<>(){{add(drink);}};
@@ -190,13 +192,21 @@ class Testing {
 
         // Create a sandwich object
         Sandwich mySandwich = new Sandwich("4 in", "Wheat", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true);
-        Sandwich mySandwich2 = new Sandwich("12 in", "Rye", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, false);
-        Drink drink = new Drink("Medium", "Cola");
-        Chip chip = new Chip("Salt and Vinegar");
+        mySandwich = new Sandwich("4 in", "Wheat", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, true, mySandwich.getTotalSandwichPrice());
 
-        List<Sandwich> sandwiches = new ArrayList<>(){{add(mySandwich); add(mySandwich2);}};
-        List<Drink> drinks = new ArrayList<>(){{add(drink);}};
-        List<Chip> chips = new ArrayList<>(){{add(chip);}};
-        FileManager.writeReceipt(sandwiches,drinks, chips);
+        Sandwich mySandwich2 = new Sandwich("12 in", "Rye", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, false);
+        mySandwich2 = new Sandwich("12 in", "Rye", "Turkey", "Provolone", meatMap, cheeseMap, otherToppingsMap, saucesMap, sidesMap, false, mySandwich2.getTotalSandwichPrice());
+        Drink drink = new Drink("Medium", "Cola", 2);
+        Drink drink2 = new Drink("Small", "Lemonade", 1);
+        Chip chip = new Chip("Salt and Vinegar", 2);
+        Chip chip2 = new Chip("Barbecue", 2);
+
+        cart.addSandwich(mySandwich);
+        cart.addSandwich(mySandwich2);
+        cart.addDrink(drink);
+        cart.addDrink(drink2);
+        cart.addChip(chip);
+        cart.addChip(chip2);
+        FileManager.writeReceipt(cart.getSandwiches(), cart.getDrinks(), cart.getChips());
     }
 }

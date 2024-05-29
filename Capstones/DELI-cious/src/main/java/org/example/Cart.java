@@ -13,6 +13,9 @@ public class Cart {
 
 
     public static BigDecimal getTotalPrice() {
+        if (totalPrice.compareTo(BigDecimal.valueOf(0)) == 0){
+            totalPrice = getNewTotalPrice();
+        }
         return totalPrice;
     }
 
@@ -20,7 +23,7 @@ public class Cart {
     public static BigDecimal getNewTotalPrice(){
         totalPrice = BigDecimal.valueOf(0);
         for (Sandwich sandwich : sandwiches){
-            totalPrice = totalPrice.add(sandwich.getTotal());
+            totalPrice = totalPrice.add(sandwich.getTotalSandwichPrice());
         }
         for (Drink drink : drinks){
             totalPrice = totalPrice.add(drink.getDrinkPrice());

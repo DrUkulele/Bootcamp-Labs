@@ -1,8 +1,6 @@
 package org.example;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -20,16 +18,19 @@ public class FileManager {
                     writer.write(sandwich.toString());
                 }
             }
-            if(drinks != null){
-                for (Drink drink : drinks){
+            writer.newLine();
+            if (drinks != null) {
+                for (Drink drink : drinks) {
                     writer.write(drink.toString());
                 }
             }
-            if(chips != null){
-                for(Chip chip : chips){
+            writer.newLine();
+            if (chips != null) {
+                for (Chip chip : chips) {
                     writer.write(chip.toString());
                 }
             }
+            writer.write("------------------------------\n");
             writer.write(formatDescription("Total: ", Cart.getTotalPrice(), maxDescriptionLength));
             writer.flush();
         } catch (IOException e) {
@@ -43,6 +44,7 @@ public class FileManager {
         String receiptFileName = currentDateAndTime.format(rFMT);
         return receiptFileName + ".txt";
     }
+
     private static String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
 
         // Calculate the adjusted width by adding additional spaces to maxDescriptionLength
@@ -51,4 +53,6 @@ public class FileManager {
         // Format the description and price with the adjusted width
         return String.format("%-" + adjustedWidth + "s $%.2f", description, price.setScale(2, RoundingMode.HALF_UP));
     }
+
 }
+

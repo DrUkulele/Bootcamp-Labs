@@ -7,11 +7,13 @@ public class Chip {
     //properties
     private String type;
     private BigDecimal price = BigDecimal.valueOf(1.50);
+    private int quantity;
     int maxDescriptionLength = 20;
 
     //constructor
-    public Chip(String type) {
+    public Chip(String type, int quantity) {
         this.type = type;
+        this.quantity = quantity;
     }
 
     //getters and setters
@@ -31,10 +33,18 @@ public class Chip {
         this.price = price;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(formatDescription(type, price, maxDescriptionLength));
+        sb.append(formatDescription(type, price, maxDescriptionLength)).append("\n");
         return sb.toString();
     }
     private String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {

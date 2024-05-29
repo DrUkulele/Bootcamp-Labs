@@ -12,7 +12,6 @@ public class UserInterface {
     private static Menu menu;
     private static Cart cart;
     private static boolean newOrder = true;
-    private static boolean checkedOut = false;
 
     static {
         menu = new Menu();
@@ -53,7 +52,7 @@ public class UserInterface {
                         orderScreen();
                         break;
                     case 2:
-                        //just break
+                        System.exit(0);
                         break;
                     default:
                         break;
@@ -225,7 +224,7 @@ public class UserInterface {
                 // Creating a new sandwich object
                 sandwich = new Sandwich(sandwich.getSize(), sandwich.getBread(), sandwich.getMeat(),
                         sandwich.getCheese(), sandwich.getExtraMeat(), sandwich.getExtraCheese(), sandwich.getOtherToppings(), sandwich.getSauces(),
-                        sandwich.getSides(), sandwich.isToasted(), sandwich.getTotalSandwichPrice(sandwich));
+                        sandwich.getSides(), sandwich.isToasted(), sandwich.getTotalSandwichPrice());
                 cart.addSandwich(sandwich);
 
                 // If all steps are successful, exit the method
@@ -250,10 +249,9 @@ public class UserInterface {
                 System.out.println("Please enter quantity: ");
                 int quantity = Integer.parseInt(scanner.nextLine());
                 //add drink size, flavor and quantity to order
-                for (int i = 0; i < quantity; i++) {
-                    Drink drink = new Drink(size, flavor);
+                    Drink drink = new Drink(size, flavor, quantity);
                     cart.addDrink(drink);
-                }
+
                 break;
             } catch (Exception ex) {
                 System.out.println("ADD ERROR MESSAGE HERE!");
@@ -272,10 +270,9 @@ public class UserInterface {
                 System.out.println("Please enter quantity: ");
                 int quantity = Integer.parseInt(scanner.nextLine());
                 //add chip quantity to order quantity to order
-                for (int i = 0; i < quantity; i++) {
-                    Chip chip = new Chip(type);
+                    Chip chip = new Chip(type, quantity);
                     cart.addChip(chip);
-                }
+
                 break;
             } catch (Exception ex) {
                 System.out.println("ADD ERROR MESSAGE HERE!");
@@ -343,7 +340,7 @@ public class UserInterface {
             System.out.println(someList);
         }
     }
-    private static String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
+    private static String formatDescription(String description, BigDecimal price, int maxDescriptionLength){
 
         // Calculate the adjusted width by adding additional spaces to maxDescriptionLength
         int adjustedWidth = 50 - maxDescriptionLength;

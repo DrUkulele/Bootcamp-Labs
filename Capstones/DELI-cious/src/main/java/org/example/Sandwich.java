@@ -172,17 +172,22 @@ public class Sandwich {
     }
 
     public BigDecimal getMeatPrice() {
-        switch (size) {
-            case "4 in":
-                meatPrice = BigDecimal.valueOf(1.00);
-                break;
-            case "8 in":
-                meatPrice = BigDecimal.valueOf(2.00);
+        if(!getMeat().isEmpty() && getMeat() != null) {
+            switch (size) {
+                case "4 in":
+                    meatPrice = BigDecimal.valueOf(1.00);
+                    break;
+                case "8 in":
+                    meatPrice = BigDecimal.valueOf(2.00);
 
-                break;
-            case "12 in":
-                meatPrice = BigDecimal.valueOf(3.00);
-                break;
+                    break;
+                case "12 in":
+                    meatPrice = BigDecimal.valueOf(3.00);
+                    break;
+            }
+        }
+        else {
+            meatPrice = BigDecimal.valueOf(0);
         }
         return meatPrice;
     }
@@ -192,18 +197,22 @@ public class Sandwich {
     }
 
     public BigDecimal getCheesePrice() {
-        switch (size) {
-            case "4 in":
-                cheesePrice = BigDecimal.valueOf(0.75);
-                break;
-            case "8 in":
-                cheesePrice = BigDecimal.valueOf(1.50);
+        if(!getCheese().equals("") && getCheese() != null) {
+            switch (size) {
+                case "4 in":
+                    cheesePrice = BigDecimal.valueOf(0.75);
+                    break;
+                case "8 in":
+                    cheesePrice = BigDecimal.valueOf(1.50);
 
-                break;
-            case "12 in":
-                cheesePrice = BigDecimal.valueOf(2.25);
-                break;
-
+                    break;
+                case "12 in":
+                    cheesePrice = BigDecimal.valueOf(2.25);
+                    break;
+            }
+        }
+        else {
+            cheesePrice = BigDecimal.valueOf(0);
         }
         return cheesePrice;
     }
@@ -213,7 +222,14 @@ public class Sandwich {
     }
 
     public BigDecimal getExtraMeatPrice() {
-        extraMeatPrice = meatPrice.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+        int numOfExtraMeat = sumHashMapValues(extraMeat);
+        if (numOfExtraMeat == 0) {
+            extraMeatPrice = BigDecimal.valueOf(0);
+        }
+        else {
+            BigDecimal currentMeatPrice = getMeatPrice();
+            extraMeatPrice = currentMeatPrice.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(numOfExtraMeat));
+        }
         return extraMeatPrice;
     }
 
@@ -222,7 +238,13 @@ public class Sandwich {
     }
 
     public BigDecimal getExtraCheesePrice() {
-        extraCheesePrice = cheesePrice.divide(BigDecimal.valueOf(2.5), RoundingMode.HALF_UP);
+        int numOfExtraCheese = sumHashMapValues(extraCheese);
+        if (numOfExtraCheese == 0) {
+            extraCheesePrice = BigDecimal.valueOf(0);
+        }
+        else {
+            extraCheesePrice = cheesePrice.divide(BigDecimal.valueOf(2.5), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(numOfExtraCheese));
+        }
 
         return extraCheesePrice;
     }
@@ -240,22 +262,16 @@ public class Sandwich {
     }
 
     //custom getter
-    public BigDecimal getTotalSandwichPrice(Sandwich sandwich) {
-        meat = sandwich.getMeat();
-        cheese = sandwich.getCheese();
+    public BigDecimal getTotalSandwichPrice() {
 
-        int numOfMeat = sumHashMapValues(extraMeat);
-        int numOfCheese = sumHashMapValues(extraCheese);
+        BigDecimal sandwichBreadPrice = getBreadPrice();
+        BigDecimal sandwichMeatPrice = getMeatPrice();
+        BigDecimal sandwichExtraMeatPrice = getExtraMeatPrice();
+        BigDecimal sandwichCheesePrice = getCheesePrice();
+        BigDecimal sandwichExtraCheesePrice = getExtraCheesePrice();
 
-        if (numOfMeat == 0) {
-            meatPrice = BigDecimal.valueOf(0);
-        }
-        if (numOfCheese == 0) {
-            cheesePrice = BigDecimal.valueOf(0);
-        }
 
-        BigDecimal price = getBreadPrice().add(
-                meatPrice.add((getExtraMeatPrice().multiply(BigDecimal.valueOf(numOfMeat))).add(cheesePrice.add(getExtraCheesePrice().multiply(BigDecimal.valueOf(numOfCheese))))));
+        BigDecimal price = sandwichBreadPrice.add(sandwichMeatPrice).add(sandwichExtraMeatPrice).add(sandwichCheesePrice).add(sandwichExtraCheesePrice);
 
 
         return price.setScale(2, RoundingMode.HALF_UP);
@@ -326,7 +342,13 @@ public class Sandwich {
                 }
 
             }
-
+            if(selectedItem.containsKey(item)){
+             int oldQuantity = selectedItem.get(item);
+               if(item != null){
+                   quantity += oldQuantity;
+                   selectedItem.put(item, quantity);
+               }
+            }
             selectedItem.put(item, quantity);
             quantity = 0;
         }
@@ -394,7 +416,10 @@ public class Sandwich {
             sb.append(mapToString(extraMeat));
         }
         if (!cheese.isEmpty()) {
-            sb.append(mapToString(extraCheese)).append("\n");
+            sb.append(mapToString(extraCheese));
+        }
+        if(total.compareTo(BigDecimal.valueOf(0)) != 0){
+            sb.append(formatDescription("Total: ", getTotalSandwichPrice(), maxDescriptionLength)).append("\n");
         }
 
 
@@ -413,6 +438,9 @@ public class Sandwich {
             if (map == extraMeat) {
                 getExtraMeatPrice();
             }
+            if(map == extraCheese){
+                getExtraCheesePrice();
+            }
 
             if (entry.getValue() > 1) {
                 keys.add(formatKey);
@@ -427,19 +455,30 @@ public class Sandwich {
 
 
         for (int i = 0; i < keys.size(); i++) {
-            String modifiedKey = keys.get(i).replaceAll("(.*?)\\*\\s*\\d+", "$1"); // Replace "* number" with an empty string
-            String number = keys.get(i).replaceAll(".*\\*\\s*(\\d+).*", "$1"); // Extract the number
-            modifiedKey = modifiedKey.trim();
+            String key = keys.get(i);
+            String modifiedKey;
+            String number = "1";
+            if (key.matches(".*\\*\\s*\\d+.*")) {
+                 modifiedKey = keys.get(i).replaceAll("(.*?)\\*\\s*\\d+", "$1"); // Replace "* number" with an empty string
+                 number = keys.get(i).replaceAll(".*\\*\\s*(\\d+).*", "$1"); // Extract the number
+                modifiedKey = modifiedKey.trim();
+            }
+            else {
+                modifiedKey = keys.get(i);
+            }
             if (menu.getMeatList().contains(modifiedKey)) {
+                BigDecimal sandwichExtraMeatPrice = getExtraMeatPrice();
 
-                sb.append(formatDescription(keys.get(i), getExtraMeatPrice().multiply(BigDecimal.valueOf(Double.parseDouble(number))), maxDescriptionLength)).append("\n");
+                    sb.append(formatDescription(keys.get(i), sandwichExtraMeatPrice, maxDescriptionLength)).append("\n");
+
             } else if (menu.getCheeseList().contains(modifiedKey)) {
-                sb.append(formatDescription(keys.get(i), getExtraCheesePrice().multiply(BigDecimal.valueOf(Double.parseDouble(number))), maxDescriptionLength)).append("\n");
+                    sb.append(formatDescription(keys.get(i), getExtraCheesePrice(), maxDescriptionLength)).append("\n");
             } else {
 
-                sb.append(formatDescription(keys.get(i), BigDecimal.valueOf(0), maxDescriptionLength)).append("\n");
+                    sb.append(formatDescription(keys.get(i), BigDecimal.valueOf(0), maxDescriptionLength)).append("\n");
             }
         }
+
 
         return sb.toString();
     }

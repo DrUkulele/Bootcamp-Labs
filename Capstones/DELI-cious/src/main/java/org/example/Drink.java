@@ -8,12 +8,14 @@ public class Drink {
     private String size;
     private String flavor;
     private BigDecimal price;
+    private int quantity;
     int maxDescriptionLength = 20;
 
     //constructor
-    public Drink(String size, String flavor) {
+    public Drink(String size, String flavor, int quantity) {
         this.size = size;
         this.flavor = flavor;
+        this.quantity = quantity;
     }
 
     //getters and setters
@@ -31,6 +33,14 @@ public class Drink {
 
     public void setFlavor(String flavor) {
         this.flavor = flavor;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public BigDecimal getDrinkPrice(){
@@ -53,8 +63,14 @@ public class Drink {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        String description = size + " " +flavor;
-        sb.append(formatDescription(description, getDrinkPrice(), maxDescriptionLength)).append("\n");
+        String description;
+        if (quantity > 1){
+          description = size + " " + flavor + " * " + quantity;
+        }
+        else {
+         description = size + " " +flavor;
+        }
+        sb.append(formatDescription(description, getDrinkPrice().multiply(BigDecimal.valueOf(quantity)), maxDescriptionLength)).append("\n");
         return sb.toString();
     }
     private String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
