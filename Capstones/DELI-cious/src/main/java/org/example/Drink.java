@@ -1,17 +1,21 @@
 package org.example;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Drink {
     //properties
     private String size;
     private String flavor;
     private BigDecimal price;
+    private int quantity;
+    int maxDescriptionLength = 20;
 
     //constructor
-    public Drink(String size, String flavor) {
+    public Drink(String size, String flavor, int quantity) {
         this.size = size;
         this.flavor = flavor;
+        this.quantity = quantity;
     }
 
     //getters and setters
@@ -31,8 +35,16 @@ public class Drink {
         this.flavor = flavor;
     }
 
-    public BigDecimal getDrinkPrice(Drink drink){
-        switch (drink.size){
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getDrinkPrice(){
+        switch (size){
             case "Small":
                price = BigDecimal.valueOf(2.00);
                break;
@@ -50,6 +62,23 @@ public class Drink {
 
     @Override
     public String toString() {
-        return size + " " + flavor + "\n";
+        StringBuilder sb = new StringBuilder();
+        String description;
+        if (quantity > 1){
+          description = size + " " + flavor + " * " + quantity;
+        }
+        else {
+         description = size + " " +flavor;
+        }
+        sb.append(formatDescription(description, getDrinkPrice().multiply(BigDecimal.valueOf(quantity)), maxDescriptionLength)).append("\n");
+        return sb.toString();
+    }
+    private String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
+
+        // Calculate the adjusted width by adding additional spaces to maxDescriptionLength
+        int adjustedWidth = 50 - maxDescriptionLength;
+
+        // Format the description and price with the adjusted width
+        return String.format("%-" + adjustedWidth + "s $%.2f", description, price.setScale(2, RoundingMode.HALF_UP));
     }
 }
