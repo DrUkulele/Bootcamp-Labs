@@ -12,6 +12,7 @@ public class UserInterface {
     private static Menu menu;
     private static Cart cart;
     private static boolean newOrder = true;
+    private static boolean checkedOut = false;
 
     static {
         menu = new Menu();
@@ -48,6 +49,7 @@ public class UserInterface {
                 switch (optionPicker()) {
                     case 1:
                         cart.clearCart();
+                        newOrder = true;
                         orderScreen();
                         break;
                     case 2:
@@ -56,7 +58,6 @@ public class UserInterface {
                     default:
                         break;
                 }
-                break;
             } catch (Exception ex) {
                 System.out.println("Please enter option as a number.");
             }
@@ -65,8 +66,8 @@ public class UserInterface {
 
     //order screen
     private static void orderScreen() {
-        if (newOrder = true) {
-            while (true) {
+
+            while (newOrder) {
                 try {
                     System.out.println("""
                             1) Add Sandwich
@@ -87,7 +88,7 @@ public class UserInterface {
                         case 4:
                             checkoutScreen();
                             newOrder = false;
-                            continue;
+                            break;
                         case 0:
                             cart.clearCart();
                             System.out.println("Order canceled");
@@ -96,17 +97,13 @@ public class UserInterface {
                         default:
                             break;
                     }
-                    continue;
                 } catch (Exception ex) {
                     System.out.println("Please enter option as a number.");
 
                 }
-                break;
-
             }
 
         }
-    }
 
     //method to add a sandwich calling the sandwich builder class to build the sandwich
     private static void addSandwichScreen() {

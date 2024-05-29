@@ -13,18 +13,19 @@ public class Sandwich {
     private String meat = "";
     private String cheese = "";
     private HashMap<String, Integer> extraMeat = new HashMap<>();
-    private HashMap<String, Integer> extraCheese = new HashMap<>();;
+    private HashMap<String, Integer> extraCheese = new HashMap<>();
+    ;
     private HashMap<String, Integer> otherToppings;
     private HashMap<String, Integer> sauces;
     private HashMap<String, Integer> sides;
     private boolean isToasted;
-    private BigDecimal breadPrice;
-    private BigDecimal meatPrice;
-    private BigDecimal cheesePrice;
-    private BigDecimal extraMeatPrice;
-    private BigDecimal extraCheesePrice;
+    private BigDecimal breadPrice = BigDecimal.valueOf(0);
+    private BigDecimal meatPrice = BigDecimal.valueOf(0);
+    private BigDecimal cheesePrice = BigDecimal.valueOf(0);
+    private BigDecimal extraMeatPrice = BigDecimal.valueOf(0);
+    private BigDecimal extraCheesePrice = BigDecimal.valueOf(0);
     int maxDescriptionLength = 20;
-    private BigDecimal total;
+    private BigDecimal total = BigDecimal.valueOf(0);
 
 
     //constructor
@@ -43,6 +44,7 @@ public class Sandwich {
 
     public Sandwich() {
     }
+
     public Sandwich(String size, String bread, String meat, String cheese, HashMap<String, Integer> extraMeat, HashMap<String, Integer> extraCheese, HashMap<String, Integer> otherToppings, HashMap<String, Integer> sauces, HashMap<String, Integer> sides, boolean isToasted, BigDecimal total) {
         this.size = size;
         this.bread = bread;
@@ -96,7 +98,7 @@ public class Sandwich {
     }
 
     public void setExtraMeat(HashMap<String, Integer> extraMeat) {
-            this.extraMeat = extraMeat;
+        this.extraMeat = extraMeat;
 
     }
 
@@ -106,7 +108,7 @@ public class Sandwich {
     }
 
     public void setExtraCheese(HashMap<String, Integer> extraCheese) {
-            this.extraCheese = extraCheese;
+        this.extraCheese = extraCheese;
 
     }
 
@@ -201,6 +203,7 @@ public class Sandwich {
             case "12 in":
                 cheesePrice = BigDecimal.valueOf(2.25);
                 break;
+
         }
         return cheesePrice;
     }
@@ -219,7 +222,8 @@ public class Sandwich {
     }
 
     public BigDecimal getExtraCheesePrice() {
-      extraCheesePrice = cheesePrice.divide(BigDecimal.valueOf(2.5), RoundingMode.HALF_UP);
+        extraCheesePrice = cheesePrice.divide(BigDecimal.valueOf(2.5), RoundingMode.HALF_UP);
+
         return extraCheesePrice;
     }
 
@@ -251,7 +255,7 @@ public class Sandwich {
         }
 
         BigDecimal price = getBreadPrice().add(
-                meatPrice.add(getExtraMeatPrice().multiply(BigDecimal.valueOf(numOfMeat)).add(cheesePrice.add(getExtraCheesePrice().multiply(BigDecimal.valueOf(numOfCheese))))));
+                meatPrice.add((getExtraMeatPrice().multiply(BigDecimal.valueOf(numOfMeat))).add(cheesePrice.add(getExtraCheesePrice().multiply(BigDecimal.valueOf(numOfCheese))))));
 
 
         return price.setScale(2, RoundingMode.HALF_UP);
@@ -260,10 +264,10 @@ public class Sandwich {
     //methods
     public <T> HashMap<T, Integer> pickItemWithQuantity(List<T> list) {
         HashMap<T, Integer> selectedItem = new HashMap<>();
-        boolean isFirst = true;
+        int index;
+        int quantity = 0;
         while (true) {
             System.out.print("Enter the number of the item you want to pick (0 to finish): ");
-            int index;
             try {
                 index = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException ex) {
@@ -271,11 +275,13 @@ public class Sandwich {
                 continue; // Restart loop if input is invalid
             }
 
+
             // Finish selection if index is 0
             if (index == 0) {
                 System.out.println("No items selected.");
                 return selectedItem;
             }
+
 
             // Validate index
             if (index < 1 || index > list.size()) {
@@ -283,49 +289,47 @@ public class Sandwich {
                 continue; // Restart loop if index is invalid
             }
 
-            System.out.print("Enter the quantity of the item: ");
-            int quantity;
-            try {
-                quantity = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException ex) {
-                System.out.println("Invalid input. Please enter a valid number.");
-                continue; // Restart loop if input is invalid
+            while(quantity <= 0) {
+                System.out.print("Enter the quantity of the item: ");
+                try {
+                    quantity = Integer.parseInt(scanner.nextLine());
+                } catch (NumberFormatException ex) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    continue; // Restart loop if input is invalid
+                }
+
+                if (quantity <= 0) {
+                    System.out.println("Invalid quantity. Please enter a positive integer.");
+
+                }
             }
 
-            if (quantity <= 0) {
-                System.out.println("Invalid quantity. Please enter a positive integer.");
-                continue; // Restart loop if quantity is invalid
-            }
 
             T item = list.get(index - 1); // Adjust index by -1 because index starts from 1
-            if (menu.getMeatList().contains(item) && quantity > 1 && isFirst == true) {
-                if(item != null) {
+            if (menu.getMeatList().contains(item) && quantity > 1 && meat != null && meat.isEmpty()) {
+                if (item != null) {
                     setMeat(item.toString());
                     quantity -= 1;
-                    isFirst = false;
-                }
-                else{
+
+                } else {
                     setMeat("");
                 }
 
 
-            }
-
-           else if (menu.getCheeseList().contains(item) && quantity > 1) {
-                if(item != null) {
+            } else if (menu.getCheeseList().contains(item) && quantity > 1 && cheese != null && cheese.isEmpty()) {
+                if (item != null) {
                     setCheese(item.toString());
                     quantity -= 1;
-                    isFirst = false;
-                }
-                else{
+
+                } else {
                     setCheese("");
                 }
 
             }
 
             selectedItem.put(item, quantity);
+            quantity = 0;
         }
-
     }
 
 
@@ -363,12 +367,12 @@ public class Sandwich {
         StringBuilder sb = new StringBuilder();
         //int maxDescriptionLength = Math.max(bread.length(), Math.max(meat.length(), Math.max(cheese.length(), Math.max(mapToString(otherToppings).length(), Math.max(mapToString(sauces).length(), mapToString(sides).length())))));
         sb.append(size).append("\n");
-        sb.append(formatDescriptionNonHashmap(bread, getBreadPrice(), maxDescriptionLength)).append("\n");
-        if(!meat.isEmpty()){
-            sb.append(formatDescriptionNonHashmap(meat, getMeatPrice(), maxDescriptionLength)).append("\n");
+        sb.append(formatDescription(bread, getBreadPrice(), maxDescriptionLength)).append("\n");
+        if (!meat.isEmpty()) {
+            sb.append(formatDescription(meat, getMeatPrice(), maxDescriptionLength)).append("\n");
         }
-        if(!cheese.isEmpty()){
-            sb.append(formatDescriptionNonHashmap(cheese, getCheesePrice(), maxDescriptionLength)).append("\n");
+        if (!cheese.isEmpty()) {
+            sb.append(formatDescription(cheese, getCheesePrice(), maxDescriptionLength)).append("\n");
         }
         if (!otherToppings.isEmpty()) {
 
@@ -383,7 +387,7 @@ public class Sandwich {
         if (isToasted) {
             sb.append("Toasted").append(" \n");
         }
-        if(!extraMeat.isEmpty() || !extraCheese.isEmpty()) {
+        if (!extraMeat.isEmpty() || !extraCheese.isEmpty()) {
             sb.append("---Add ons---\n");
         }
         if (!meat.isEmpty()) {
@@ -406,7 +410,7 @@ public class Sandwich {
 
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             String formatKey = entry.getKey() + " * " + entry.getValue();
-            if(map == extraMeat){
+            if (map == extraMeat) {
                 getExtraMeatPrice();
             }
 
@@ -420,45 +424,27 @@ public class Sandwich {
             sb.delete(sb.length() - 0, sb.length());
         }
 
-//        for(int i = 0; i < keys.size(); i ++){
-//
-//            if(keys.get(i).length() > maxDescriptionLength){
-//                maxDescriptionLength = keys.get(i).length();
-//            }
-//
-//        }
-        boolean containsSubstring = false;
-        for (int i = 0; i < keys.size(); i ++) {
+
+
+        for (int i = 0; i < keys.size(); i++) {
             String modifiedKey = keys.get(i).replaceAll("(.*?)\\*\\s*\\d+", "$1"); // Replace "* number" with an empty string
             String number = keys.get(i).replaceAll(".*\\*\\s*(\\d+).*", "$1"); // Extract the number
             modifiedKey = modifiedKey.trim();
-            if(menu.getMeatList().contains(modifiedKey)){
+            if (menu.getMeatList().contains(modifiedKey)) {
 
-                    sb.append(formatDescription(keys.get(i), getExtraMeatPrice().multiply(BigDecimal.valueOf(Integer.parseInt(number))), maxDescriptionLength)).append("\n");
+                sb.append(formatDescription(keys.get(i), getExtraMeatPrice().multiply(BigDecimal.valueOf(Double.parseDouble(number))), maxDescriptionLength)).append("\n");
+            } else if (menu.getCheeseList().contains(modifiedKey)) {
+                sb.append(formatDescription(keys.get(i), getExtraCheesePrice().multiply(BigDecimal.valueOf(Double.parseDouble(number))), maxDescriptionLength)).append("\n");
+            } else {
+
+                sb.append(formatDescription(keys.get(i), BigDecimal.valueOf(0), maxDescriptionLength)).append("\n");
             }
-            else if(menu.getCheeseList().contains(modifiedKey)) {
-                sb.append(formatDescription(keys.get(i), getExtraCheesePrice().multiply(BigDecimal.valueOf(Integer.parseInt(number))), maxDescriptionLength)).append("\n");
-            }
-
-                else{
-
-                    sb.append(formatDescription(keys.get(i), BigDecimal.valueOf(0), maxDescriptionLength)).append("\n");
-                }
-            }
-
-                return sb.toString();
         }
 
-    private String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
-
-        // Calculate the adjusted width by adding additional spaces to maxDescriptionLength
-        int adjustedWidth = 50 - maxDescriptionLength;
-
-        // Format the description and price with the adjusted width
-        return String.format("%-" + adjustedWidth + "s $%.2f", description, price.setScale(2, RoundingMode.HALF_UP));
+        return sb.toString();
     }
 
-    private String formatDescriptionNonHashmap(String description, BigDecimal price, int maxDescriptionLength) {
+    private String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
 
         // Calculate the adjusted width by adding additional spaces to maxDescriptionLength
         int adjustedWidth = 50 - maxDescriptionLength;

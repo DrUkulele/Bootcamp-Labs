@@ -18,6 +18,7 @@ public class Cart {
 
     //methods
     public static BigDecimal getNewTotalPrice(){
+        totalPrice = BigDecimal.valueOf(0);
         for (Sandwich sandwich : sandwiches){
             totalPrice = totalPrice.add(sandwich.getTotal());
         }
