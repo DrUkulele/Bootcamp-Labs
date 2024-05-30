@@ -66,5 +66,8 @@ public class Cart {
         FileManager.writeReceipt(sandwiches, drinks, chips);
     }
 
+    public <T> void removeItemFromCart(List<T> list, int index){
+        list.remove(index - 1);
+    }
 
 }

@@ -172,7 +172,7 @@ public class Sandwich {
     }
 
     public BigDecimal getMeatPrice() {
-        if(!getMeat().isEmpty() && getMeat() != null) {
+        if (!getMeat().isEmpty() && getMeat() != null) {
             switch (size) {
                 case "4 in":
                     meatPrice = BigDecimal.valueOf(1.00);
@@ -185,8 +185,7 @@ public class Sandwich {
                     meatPrice = BigDecimal.valueOf(3.00);
                     break;
             }
-        }
-        else {
+        } else {
             meatPrice = BigDecimal.valueOf(0);
         }
         return meatPrice;
@@ -197,7 +196,7 @@ public class Sandwich {
     }
 
     public BigDecimal getCheesePrice() {
-        if(!getCheese().equals("") && getCheese() != null) {
+        if (!getCheese().equals("") && getCheese() != null) {
             switch (size) {
                 case "4 in":
                     cheesePrice = BigDecimal.valueOf(0.75);
@@ -210,8 +209,7 @@ public class Sandwich {
                     cheesePrice = BigDecimal.valueOf(2.25);
                     break;
             }
-        }
-        else {
+        } else {
             cheesePrice = BigDecimal.valueOf(0);
         }
         return cheesePrice;
@@ -225,8 +223,7 @@ public class Sandwich {
         int numOfExtraMeat = sumHashMapValues(extraMeat);
         if (numOfExtraMeat == 0) {
             extraMeatPrice = BigDecimal.valueOf(0);
-        }
-        else {
+        } else {
             BigDecimal currentMeatPrice = getMeatPrice();
             extraMeatPrice = currentMeatPrice.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(numOfExtraMeat));
         }
@@ -241,8 +238,7 @@ public class Sandwich {
         int numOfExtraCheese = sumHashMapValues(extraCheese);
         if (numOfExtraCheese == 0) {
             extraCheesePrice = BigDecimal.valueOf(0);
-        }
-        else {
+        } else {
             extraCheesePrice = cheesePrice.divide(BigDecimal.valueOf(2.5), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(numOfExtraCheese));
         }
 
@@ -305,7 +301,7 @@ public class Sandwich {
                 continue; // Restart loop if index is invalid
             }
 
-            while(quantity <= 0) {
+            while (quantity <= 0) {
                 System.out.print("Enter the quantity of the item: ");
                 try {
                     quantity = Integer.parseInt(scanner.nextLine());
@@ -342,12 +338,12 @@ public class Sandwich {
                 }
 
             }
-            if(selectedItem.containsKey(item)){
-             int oldQuantity = selectedItem.get(item);
-               if(item != null){
-                   quantity += oldQuantity;
-                   selectedItem.put(item, quantity);
-               }
+            if (selectedItem.containsKey(item)) {
+                int oldQuantity = selectedItem.get(item);
+                if (item != null) {
+                    quantity += oldQuantity;
+                    selectedItem.put(item, quantity);
+                }
             }
             selectedItem.put(item, quantity);
             quantity = 0;
@@ -384,6 +380,65 @@ public class Sandwich {
         return sum;
     }
 
+    //method to edit a sandwich
+    public static void editSandwich(Sandwich sandwich, int partToEdit) {
+            switch (partToEdit) {
+                case 1:
+                    while (true) {
+                        try {
+                            System.out.println("---Edit Size---");
+                            System.out.println("Current size: " + sandwich.getSize());
+                            System.out.println("---------------");
+                            UserInterface.displayWithNumbers(menu.getSizeList());
+                            int newSize = Integer.parseInt(scanner.nextLine());
+                            sandwich.setSize(menu.getSizeList().get(newSize - 1));
+                            System.out.println("New Size: " + sandwich.getSize());
+                            break;
+                        }
+                        catch (Exception ex){
+                            System.out.println("PLease choose a size from the list.");
+                        }
+                    }
+                    break;
+                case 2:
+                    while (true) {
+                        try {
+                            System.out.println("---Edit Bread---");
+                            System.out.println("Current Bread: " + sandwich.getBread());
+                            System.out.println("---------------");
+                            UserInterface.displayWithNumbers(menu.getBreadList());
+                            int newBread = Integer.parseInt(scanner.nextLine());
+                            sandwich.setBread(menu.getBreadList().get(newBread - 1));
+                            System.out.println("New Bread: " + sandwich.getBread());
+                            break;
+                        }
+                        catch (Exception ex){
+                            System.out.println("PLease choose a bread from the list.");
+                        }
+                    }
+                    break;
+                case 3:
+                    //Meat
+                    break;
+                case 4:
+                    //Cheese
+                    break;
+                case 5:
+                    //Other Toppings
+                    break;
+                case 6:
+                    //Sauces
+                    break;
+                case 7:
+                    // Sides
+                    break;
+                case 8:
+                    break;
+            }
+
+
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -418,7 +473,7 @@ public class Sandwich {
         if (!cheese.isEmpty()) {
             sb.append(mapToString(extraCheese));
         }
-        if(total.compareTo(BigDecimal.valueOf(0)) != 0){
+        if (total.compareTo(BigDecimal.valueOf(0)) != 0) {
             sb.append(formatDescription("Total: ", getTotalSandwichPrice(), maxDescriptionLength)).append("\n");
         }
 
@@ -438,7 +493,7 @@ public class Sandwich {
             if (map == extraMeat) {
                 getExtraMeatPrice();
             }
-            if(map == extraCheese){
+            if (map == extraCheese) {
                 getExtraCheesePrice();
             }
 
@@ -453,29 +508,33 @@ public class Sandwich {
         }
 
 
-
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
             String modifiedKey;
             String number = "1";
             if (key.matches(".*\\*\\s*\\d+.*")) {
-                 modifiedKey = keys.get(i).replaceAll("(.*?)\\*\\s*\\d+", "$1"); // Replace "* number" with an empty string
-                 number = keys.get(i).replaceAll(".*\\*\\s*(\\d+).*", "$1"); // Extract the number
+                modifiedKey = keys.get(i).replaceAll("(.*?)\\*\\s*\\d+", "$1"); // Replace "* number" with an empty string
+                number = keys.get(i).replaceAll(".*\\*\\s*(\\d+).*", "$1"); // Extract the number
                 modifiedKey = modifiedKey.trim();
-            }
-            else {
+            } else {
                 modifiedKey = keys.get(i);
             }
             if (menu.getMeatList().contains(modifiedKey)) {
-                BigDecimal sandwichExtraMeatPrice = getExtraMeatPrice();
+                int meatNumber = sumHashMapValues(extraMeat);
+                BigDecimal sandwichExtraMeatPrice = getExtraMeatPrice().divide(BigDecimal.valueOf(meatNumber), RoundingMode.HALF_UP);
+                BigDecimal priceForExtraMeat = sandwichExtraMeatPrice.multiply(BigDecimal.valueOf(Long.parseLong(number)));
 
-                    sb.append(formatDescription(keys.get(i), sandwichExtraMeatPrice, maxDescriptionLength)).append("\n");
+                sb.append(formatDescription(keys.get(i), priceForExtraMeat, maxDescriptionLength)).append("\n");
 
             } else if (menu.getCheeseList().contains(modifiedKey)) {
-                    sb.append(formatDescription(keys.get(i), getExtraCheesePrice(), maxDescriptionLength)).append("\n");
+                int cheeseNumber = sumHashMapValues(extraCheese);
+                BigDecimal sandwichExtraCheesePrice = getExtraCheesePrice().divide(BigDecimal.valueOf(cheeseNumber), RoundingMode.HALF_UP);
+                BigDecimal priceForExtraCheese = sandwichExtraCheesePrice.multiply(BigDecimal.valueOf(Long.parseLong(number)));
+
+                sb.append(formatDescription(keys.get(i), priceForExtraCheese, maxDescriptionLength)).append("\n");
             } else {
 
-                    sb.append(formatDescription(keys.get(i), BigDecimal.valueOf(0), maxDescriptionLength)).append("\n");
+                sb.append(formatDescription(keys.get(i), BigDecimal.valueOf(0), maxDescriptionLength)).append("\n");
             }
         }
 

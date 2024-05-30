@@ -66,43 +66,46 @@ public class UserInterface {
     //order screen
     private static void orderScreen() {
 
-            while (newOrder) {
-                try {
-                    System.out.println("""
-                            1) Add Sandwich
-                            2) Add Drink
-                            3) Add Chips
-                            4) Checkout
-                            0) Cancel Order""");
-                    switch (optionPicker()) {
-                        case 1:
-                            addSandwichScreen();
-                            break;
-                        case 2:
-                            addDrinkScreen();
-                            break;
-                        case 3:
-                            addChipsScreen();
-                            break;
-                        case 4:
-                            checkoutScreen();
-                            newOrder = false;
-                            break;
-                        case 0:
-                            cart.clearCart();
-                            System.out.println("Order canceled");
-                            newOrder = false;
-                            break;
-                        default:
-                            break;
-                    }
-                } catch (Exception ex) {
-                    System.out.println("Please enter option as a number.");
-
+        while (newOrder) {
+            try {
+                System.out.println("""
+                        1) Add Sandwich
+                        2) Add Drink
+                        3) Add Chips
+                        4) Edit Order
+                        5) Checkout
+                        0) Cancel Order""");
+                switch (optionPicker()) {
+                    case 1:
+                        addSandwichScreen();
+                        break;
+                    case 2:
+                        addDrinkScreen();
+                        break;
+                    case 3:
+                        addChipsScreen();
+                        break;
+                    case 4:
+                        editOrderScreen();
+                        break;
+                    case 5:
+                        checkoutScreen();
+                        break;
+                    case 0:
+                        cart.clearCart();
+                        System.out.println("Order canceled");
+                        newOrder = false;
+                        break;
+                    default:
+                        break;
                 }
-            }
+            } catch (Exception ex) {
+                System.out.println("Please enter option as a number.");
 
+            }
         }
+
+    }
 
     //method to add a sandwich calling the sandwich builder class to build the sandwich
     private static void addSandwichScreen() {
@@ -249,8 +252,8 @@ public class UserInterface {
                 System.out.println("Please enter quantity: ");
                 int quantity = Integer.parseInt(scanner.nextLine());
                 //add drink size, flavor and quantity to order
-                    Drink drink = new Drink(size, flavor, quantity);
-                    cart.addDrink(drink);
+                Drink drink = new Drink(size, flavor, quantity);
+                cart.addDrink(drink);
 
                 break;
             } catch (Exception ex) {
@@ -270,8 +273,8 @@ public class UserInterface {
                 System.out.println("Please enter quantity: ");
                 int quantity = Integer.parseInt(scanner.nextLine());
                 //add chip quantity to order quantity to order
-                    Chip chip = new Chip(type, quantity);
-                    cart.addChip(chip);
+                Chip chip = new Chip(type, quantity);
+                cart.addChip(chip);
 
                 break;
             } catch (Exception ex) {
@@ -281,41 +284,160 @@ public class UserInterface {
         }
     }
 
-    //checkoutMethod
-    private static void checkoutScreen() {
-        while (true) {
-           try {
-                System.out.println("---CheckOut---");
-                //display the order back to user
-            if(cart.getSandwiches() != null || !cart.getSandwiches().isEmpty()) {
-                displayList(cart.getSandwiches());
-            }
-               if(cart.getDrinks() != null || !cart.getDrinks().isEmpty()) {
-                   displayList(cart.getDrinks());
-               }
-               if(cart.getChips() != null || !cart.getChips().isEmpty()) {
-                   displayList(cart.getChips());
-               }
-                //display the total of the order
-                System.out.println(formatDescription("Total: ", Cart.getNewTotalPrice(), 20) );
+    //method for editing order
+    private static void editOrderScreen() {
+        boolean editOrder = true;
+        while (editOrder) {
+            try {
+
                 System.out.println("""
-                        1) Confirm
-                        2) Cancel""");
+                        ---Edit Order---
+                        1) Remove Item From Order
+                        2) Edit Sandwich
+                        3) Edit Drink
+                        4) Edit Chips
+                        0) Go Back""");
                 switch (optionPicker()) {
                     case 1:
-                        FileManager.writeReceipt(cart.getSandwiches(), cart.getDrinks(), cart.getChips());
+                        removeItemScreen();
                         break;
                     case 2:
-                        cart.clearCart();
-                        System.out.println("Order canceled.");
+                        //method to edit a sandwich, after displaying all current sandwiches in the order, by picking one from the array, then allowing for ingredient editing
+                        editSandwich();
+                        break;
+                    case 3:
+                        //method to edit a drink, after displaying all current drinks
+                        break;
+                    case 4:
+                        //method to edit chips, after displaying all current chips
+                        break;
+                    case 0:
+                        System.out.println("Returning to Order Screen");
+                        editOrder = false;
                         break;
                     default:
                         break;
                 }
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE!");
+            }
+        }
+    }
+    public static void editSandwich(){
+        int sandwichToEdit;
+        while (true) {
+            try {
+                System.out.println("---Edit Sandwich---");
+                displayWithNumbers(cart.getSandwiches());
+                System.out.print("Please chose which sandwich you would like to edit: ");
+                sandwichToEdit = Integer.parseInt(scanner.nextLine()) - 1;
                 break;
-           } catch (Exception ex) {
-               System.out.println("ADD ERROR MESSAGE HERE!");
-           }
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE");
+            }
+            }
+             while(true){
+                 try {
+                System.out.println("---Edit---");
+                System.out.println(sandwich);
+                System.out.println("""
+                        1) Size
+                        2) Bread
+                        3) Meat
+                        4) Cheese
+                        5) Other Toppings
+                        6) Sauces
+                        7) Sides
+                        0) Go Back""");
+                int optionToEdit = Integer.parseInt(scanner.nextLine());
+                if(optionToEdit == 0){
+                    break;
+                }
+                else {
+                    Sandwich.editSandwich(cart.getSandwiches().get(sandwichToEdit), optionToEdit);
+                }
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE");
+            }
+        }
+    }
+
+
+
+    //method for picking which item to remove
+    public static void removeItemScreen() {
+        boolean removeItem = true;
+        int index;
+        while (removeItem) {
+            try {
+                System.out.println("---RemoveItem---");
+                System.out.println("""
+                        1) Sandwich
+                        2) Drink
+                        3) Chips
+                        0) Go Back""");
+                switch (optionPicker()) {
+                    case 1:
+                        displayWithNumbers(cart.getSandwiches());
+                        System.out.print("Please pick the number of the Sandwich you wish to remove: ");
+                        index = Integer.parseInt(scanner.nextLine());
+                        cart.removeItemFromCart(cart.getSandwiches(), index);
+                        break;
+                    case 2:
+                        displayWithNumbers(cart.getDrinks());
+                        System.out.print("Please pick the number of the Drink you wish to remove: ");
+                        index = Integer.parseInt(scanner.nextLine());
+                        cart.removeItemFromCart(cart.getDrinks(), index);
+                        break;
+                    case 3:
+                        displayWithNumbers(cart.getChips());
+                        System.out.print("Please pick the number of the Chips you wish to remove: ");
+                        index = Integer.parseInt(scanner.nextLine());
+                        cart.removeItemFromCart(cart.getChips(), index);
+                        break;
+                    case 0:
+                        System.out.println("Returning to Edit Order Screen");
+                        removeItem = false;
+                        break;
+                    default:
+                        break;
+                }
+
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE");
+            }
+        }
+    }
+
+
+    //checkoutMethod
+    private static void checkoutScreen() {
+        while (true) {
+            try {
+                System.out.println("---CheckOut---");
+                //display the order back to user
+                if (cart.getSandwiches() != null || !cart.getSandwiches().isEmpty()) {
+                    displayList(cart.getSandwiches());
+                }
+                if (cart.getDrinks() != null || !cart.getDrinks().isEmpty()) {
+                    displayList(cart.getDrinks());
+                }
+                if (cart.getChips() != null || !cart.getChips().isEmpty()) {
+                    displayList(cart.getChips());
+                }
+                //display the total of the order
+                System.out.println(formatDescription("Total: ", Cart.getNewTotalPrice(), 20));
+                System.out.println("""
+                        1) Confirm
+                        2) Go Back""");
+                if (optionPicker() == 1) {
+                    cart.writeReceiptFromCart();
+                    newOrder = false;
+                }
+                break;
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE!");
+            }
 
 
         }
@@ -335,12 +457,14 @@ public class UserInterface {
             System.out.println((i + 1) + ") " + item);
         }
     }
+
     public static <T> void displayList(List<T> list) {
         for (T someList : list) {
             System.out.println(someList);
         }
     }
-    private static String formatDescription(String description, BigDecimal price, int maxDescriptionLength){
+
+    private static String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
 
         // Calculate the adjusted width by adding additional spaces to maxDescriptionLength
         int adjustedWidth = 50 - maxDescriptionLength;
@@ -349,4 +473,5 @@ public class UserInterface {
         return String.format("%-" + adjustedWidth + "s $%.2f", description, price.setScale(2, RoundingMode.HALF_UP));
     }
 }
+
 
