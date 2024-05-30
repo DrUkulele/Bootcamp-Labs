@@ -323,7 +323,8 @@ public class UserInterface {
             }
         }
     }
-    public static void editSandwich(){
+
+    public static void editSandwich() {
         int sandwichToEdit;
         while (true) {
             try {
@@ -335,9 +336,9 @@ public class UserInterface {
             } catch (Exception ex) {
                 System.out.println("ADD ERROR MESSAGE HERE");
             }
-            }
-             while(true){
-                 try {
+        }
+        while (true) {
+            try {
                 System.out.println("---Edit---");
                 System.out.println(sandwich);
                 System.out.println("""
@@ -350,10 +351,9 @@ public class UserInterface {
                         7) Sides
                         0) Go Back""");
                 int optionToEdit = Integer.parseInt(scanner.nextLine());
-                if(optionToEdit == 0){
+                if (optionToEdit == 0) {
                     break;
-                }
-                else {
+                } else {
                     Sandwich.editSandwich(cart.getSandwiches().get(sandwichToEdit), optionToEdit);
                 }
             } catch (Exception ex) {
@@ -362,6 +362,58 @@ public class UserInterface {
         }
     }
 
+    public static void editDrink() {
+        int drinkToEdit;
+        while (true) {
+            try {
+                System.out.println("---Edit Drink---");
+                displayWithNumbers(cart.getDrinks());
+                System.out.print("Please chose which drink you would like to edit: ");
+                drinkToEdit = Integer.parseInt(scanner.nextLine()) - 1;
+                break;
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE");
+            }
+        }
+        while (true) {
+            try {
+                System.out.println("---Edit---");
+                System.out.println();
+                System.out.println("""
+                        1) Size
+                        2) Bread
+                        3) Meat
+                        4) Cheese
+                        5) Other Toppings
+                        6) Sauces
+                        7) Sides
+                        0) Go Back""");
+                int optionToEdit = Integer.parseInt(scanner.nextLine());
+                if (optionToEdit == 0) {
+                    break;
+                } else {
+                    Sandwich.editSandwich(cart.getSandwiches().get(drinkToEdit), optionToEdit);
+                }
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE");
+            }
+        }
+    }
+
+    public static void editChips() {
+        int chipsToEdit;
+        while (true) {
+            try {
+                System.out.println("---Edit Chips---");
+                displayWithNumbers(cart.getChips());
+                System.out.print("Please chose which chips you would like to edit: ");
+                chipsToEdit = Integer.parseInt(scanner.nextLine()) - 1;
+                break;
+            } catch (Exception ex) {
+                System.out.println("ADD ERROR MESSAGE HERE");
+            }
+        }
+    }
 
 
     //method for picking which item to remove

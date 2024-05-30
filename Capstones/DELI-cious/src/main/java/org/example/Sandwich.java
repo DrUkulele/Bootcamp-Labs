@@ -274,7 +274,7 @@ public class Sandwich {
     }
 
     //methods
-    public <T> HashMap<T, Integer> pickItemWithQuantity(List<T> list) {
+    public  <T> HashMap<T, Integer> pickItemWithQuantity(List<T> list) {
         HashMap<T, Integer> selectedItem = new HashMap<>();
         int index;
         int quantity = 0;
@@ -318,13 +318,13 @@ public class Sandwich {
 
 
             T item = list.get(index - 1); // Adjust index by -1 because index starts from 1
-            if (menu.getMeatList().contains(item) && quantity > 1 && meat != null && meat.isEmpty()) {
-                if (item != null) {
+            if (menu.getMeatList().contains(item) && meat != null && meat.isEmpty()) {
+                if (quantity > 1) {
                     setMeat(item.toString());
                     quantity -= 1;
 
                 } else {
-                    setMeat("");
+                    setMeat((String) item);
                 }
 
 
@@ -334,7 +334,7 @@ public class Sandwich {
                     quantity -= 1;
 
                 } else {
-                    setCheese("");
+                    setCheese((String) item);
                 }
 
             }
@@ -382,59 +382,313 @@ public class Sandwich {
 
     //method to edit a sandwich
     public static void editSandwich(Sandwich sandwich, int partToEdit) {
-            switch (partToEdit) {
-                case 1:
-                    while (true) {
-                        try {
-                            System.out.println("---Edit Size---");
-                            System.out.println("Current size: " + sandwich.getSize());
-                            System.out.println("---------------");
-                            UserInterface.displayWithNumbers(menu.getSizeList());
-                            int newSize = Integer.parseInt(scanner.nextLine());
-                            sandwich.setSize(menu.getSizeList().get(newSize - 1));
-                            System.out.println("New Size: " + sandwich.getSize());
+        int itemToEdit = -1;
+        String keyToEdit = null;
+        switch (partToEdit) {
+            case 1:
+                while (true) {
+                    try {
+                        System.out.println("-----Edit Size-----");
+                        System.out.println("Current size: " + sandwich.getSize());
+                        System.out.println("-------------------");
+                        UserInterface.displayWithNumbers(menu.getSizeList());
+                        int newSize = Integer.parseInt(scanner.nextLine());
+                        sandwich.setSize(menu.getSizeList().get(newSize - 1));
+                        System.out.println("New Size: " + sandwich.getSize());
+                        break;
+                    } catch (Exception ex) {
+                        System.out.println("PLease choose a size from the list.");
+                    }
+                }
+                break;
+            case 2:
+                while (true) {
+                    try {
+                        System.out.println("-----Edit Bread-----");
+                        System.out.println("Current Bread: " + sandwich.getBread());
+                        System.out.println("--------------------");
+                        UserInterface.displayWithNumbers(menu.getBreadList());
+                        int newBread = Integer.parseInt(scanner.nextLine());
+                        sandwich.setBread(menu.getBreadList().get(newBread - 1));
+                        System.out.println("New Bread: " + sandwich.getBread());
+                        break;
+                    } catch (Exception ex) {
+                        System.out.println("PLease choose a bread from the list.");
+                    }
+                }
+                break;
+            case 3:
+                System.out.println("-----Edit Meat-----");
+                if (!sandwich.getExtraMeat().isEmpty()) {
+                System.out.println("---Current Meat---");
+                    String key = sandwich.getMeat();
+                    if (sandwich.getExtraMeat().containsKey(key)) {
+                        int currentQuantity = sandwich.getExtraMeat().get(key);
+                        sandwich.getExtraMeat().put(key, currentQuantity + 1);
+                    }
+                    UserInterface.displayList(sandwich.mapToArrayListNoPrice(sandwich.getExtraMeat()));
+                }
+                else if(!sandwich.getMeat().isEmpty()){
+                    sandwich.getExtraMeat().put(sandwich.getMeat(), 1);
+                }
+                // Let the user pick a meat item by number
+                while (true) {
+                    try {
+                        if (!sandwich.getExtraMeat().isEmpty()){
+                            System.out.println("---Pick Meat To Edit---");
+
+                        UserInterface.displayWithNumbers(sandwich.mapToArrayListNoPrice(sandwich.getExtraMeat()));
+                            System.out.println("00) Add Meat");
+                    }
+                       else{
+                           System.out.println("00) Add Meat");
+
+                        }
+
+                        itemToEdit = Integer.parseInt(scanner.nextLine());
+
+                        if(itemToEdit == 00){
+                            System.out.println("Pick Meat to add");
+                            // Call the method to get the HashMap
+                            HashMap<String, Integer> extraMeat = sandwich.getExtraMeat();
+                            UserInterface.displayWithNumbers(menu.getMeatList());
+                            HashMap<String, Integer> meatList = sandwich.pickItemWithQuantity(menu.getMeatList());
+
+                            // Update extraMeat with missing info from meatList
+                            for (Map.Entry<String, Integer> entry : meatList.entrySet()) {
+                                String key = entry.getKey();
+                                Integer value = entry.getValue();
+
+                                // Check if key is missing in extraMeat
+                                if (!extraMeat.containsKey(key) && sandwich.getMeat().isEmpty()) {
+                                    // Add key-value pair from meatList to extraMeat
+                                    sandwich.setMeat(key);
+                                    extraMeat.put(key, value - 1);
+                                }
+                                else if(!extraMeat.containsKey(key) && !sandwich.getMeat().equals(key))
+                                    extraMeat.put(key, value);
+                            }
+
+                           break;
+                        }
+                        else {
+
+                            // Convert the selected item number to the corresponding key
+                            List<String> meatList = new ArrayList<>(sandwich.getExtraMeat().keySet());
+                            if (itemToEdit >= 1 && itemToEdit <= meatList.size()) {
+                                keyToEdit = meatList.get(itemToEdit - 1); // Adjust for 0-based indexing
+                            } else {
+                                System.out.println("Invalid selection.");
+                                continue;
+                            }
+
+                            // Get the quantity of the selected meat item
+                            int currentQuantity = sandwich.getExtraMeat().get(keyToEdit);
+                            System.out.println("Meat to Edit: " + keyToEdit);
+                            System.out.print("Please enter new quantity: ");
+                            int newQuantity = Integer.parseInt(scanner.nextLine());
+
+                            // Update quantity if the new quantity is valid
+                            if (newQuantity >= 0) {
+                                // Remove meat from primary string if quantity is set to 0
+                                if (newQuantity == 0) {
+                                    sandwich.getExtraMeat().remove(keyToEdit);
+                                    if (sandwich.getMeat().equals(keyToEdit)) {
+                                        // Update primary meat to a new meat if available in extra meat HashMap
+                                        if (!sandwich.getExtraMeat().isEmpty()) {
+                                            String newPrimaryMeat = sandwich.getExtraMeat().keySet().iterator().next();
+                                            sandwich.setMeat(newPrimaryMeat);
+                                            System.out.println("Primary meat set to " + newPrimaryMeat);
+                                            // Decrement quantity of the new primary meat
+                                            sandwich.getExtraMeat().put(newPrimaryMeat, sandwich.getExtraMeat().get(newPrimaryMeat) - 1);
+                                            System.out.println("Quantity of " + newPrimaryMeat + " decremented to " + (sandwich.getExtraMeat().get(newPrimaryMeat)));
+                                        } else {
+                                            sandwich.setMeat(""); // No meat available, set primary meat to empty string
+                                            System.out.println("Primary meat removed from sandwich.");
+                                        }
+                                    }
+                                } else {
+                                    if (sandwich.getMeat().equals(keyToEdit))
+                                        newQuantity --;
+
+                                    // Update quantity of the meat item in the extra meat HashMap
+                                    sandwich.getExtraMeat().put(keyToEdit, newQuantity);
+                                    System.out.println("Quantity of " + keyToEdit + " updated to " + newQuantity);
+
+                                    // Check if the primary meat needs to be updated
+                                    if (newQuantity == 1 && !keyToEdit.equals(sandwich.getMeat())) {
+                                        // Update primary meat string
+                                        sandwich.setMeat(keyToEdit);
+                                        System.out.println("Primary meat set to " + keyToEdit);
+                                    }
+                                }
+                                break; // Exit the loop if input is valid
+                            } else {
+                                System.out.println("Invalid quantity. Please enter a non-negative number.");
+                            }
+                        }
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Invalid input. Please enter a number.");
+                    }
+                }
+                break;
+            case 4:
+                System.out.println("-----Edit Cheese-----");
+                if (!sandwich.getExtraCheese().isEmpty()) {
+                    System.out.println("---Current Cheese---");
+                    String key = sandwich.getCheese();
+                    if (sandwich.getExtraCheese().containsKey(key)) {
+                        int currentQuantity = sandwich.getExtraCheese().get(key);
+                        sandwich.getExtraCheese().put(key, currentQuantity + 1);
+                    }
+                    UserInterface.displayList(sandwich.mapToArrayListNoPrice(sandwich.getExtraCheese()));
+                }
+                else if(!sandwich.getCheese().isEmpty()){
+                    sandwich.getExtraCheese().put(sandwich.getCheese(), 1);
+                }
+                // Let the user pick a Cheese item by number
+                while (true) {
+                    try {
+                        if (!sandwich.getExtraCheese().isEmpty()){
+                            System.out.println("---Pick Cheese To Edit---");
+
+                            UserInterface.displayWithNumbers(sandwich.mapToArrayListNoPrice(sandwich.getExtraCheese()));
+                            System.out.println("00) Add Cheese");
+                        }
+                        else{
+                            System.out.println("00) Add Cheese");
+
+                        }
+
+                        itemToEdit = Integer.parseInt(scanner.nextLine());
+
+                        if(itemToEdit == 00){
+                            System.out.println("Pick Cheese to add");
+                            // Call the method to get the HashMap
+                            HashMap<String, Integer> extraCheese = sandwich.getExtraCheese();
+                            UserInterface.displayWithNumbers(menu.getCheeseList());
+                            HashMap<String, Integer> CheeseList = sandwich.pickItemWithQuantity(menu.getCheeseList());
+
+                            // Update extraCheese with missing info from CheeseList
+                            for (Map.Entry<String, Integer> entry : CheeseList.entrySet()) {
+                                String key = entry.getKey();
+                                Integer value = entry.getValue();
+
+                                // Check if key is missing in extraCheese
+                                if (!extraCheese.containsKey(key) && sandwich.getCheese().isEmpty()) {
+                                    // Add key-value pair from CheeseList to extraCheese
+                                    sandwich.setCheese(key);
+                                    extraCheese.put(key, value - 1);
+                                }
+                                else if(!extraCheese.containsKey(key) && !sandwich.getCheese().equals(key))
+                                    extraCheese.put(key, value);
+                            }
+
                             break;
                         }
-                        catch (Exception ex){
-                            System.out.println("PLease choose a size from the list.");
+                        else {
+
+                            // Convert the selected item number to the corresponding key
+                            List<String> CheeseList = new ArrayList<>(sandwich.getExtraCheese().keySet());
+                            if (itemToEdit >= 1 && itemToEdit <= CheeseList.size()) {
+                                keyToEdit = CheeseList.get(itemToEdit - 1); // Adjust for 0-based indexing
+                            } else {
+                                System.out.println("Invalid selection.");
+                                continue;
+                            }
+
+                            // Get the quantity of the selected Cheese item
+                            System.out.println("Cheese to Edit: " + keyToEdit);
+                            System.out.print("Please enter new quantity: ");
+                            int newQuantity = Integer.parseInt(scanner.nextLine());
+
+                            // Update quantity if the new quantity is valid
+                            if (newQuantity >= 0) {
+                                // Remove Cheese from primary string if quantity is set to 0
+                                if (newQuantity == 0) {
+                                    sandwich.getExtraCheese().remove(keyToEdit);
+                                    if (sandwich.getCheese().equals(keyToEdit)) {
+                                        // Update primary Cheese to a new Cheese if available in extra Cheese HashMap
+                                        if (!sandwich.getExtraCheese().isEmpty()) {
+                                            String newPrimaryCheese = sandwich.getExtraCheese().keySet().iterator().next();
+                                            sandwich.setCheese(newPrimaryCheese);
+                                            System.out.println("Primary Cheese set to " + newPrimaryCheese);
+                                            // Decrement quantity of the new primary Cheese
+                                            sandwich.getExtraCheese().put(newPrimaryCheese, sandwich.getExtraCheese().get(newPrimaryCheese) - 1);
+                                            System.out.println("Quantity of " + newPrimaryCheese + " decremented to " + (sandwich.getExtraCheese().get(newPrimaryCheese)));
+                                        } else {
+                                            sandwich.setCheese(""); // No Cheese available, set primary Cheese to empty string
+                                            System.out.println("Primary Cheese removed from sandwich.");
+                                        }
+                                    }
+                                } else {
+                                    if (sandwich.getCheese().equals(keyToEdit))
+                                        newQuantity --;
+
+                                    // Update quantity of the Cheese item in the extra Cheese HashMap
+                                    sandwich.getExtraCheese().put(keyToEdit, newQuantity);
+                                    System.out.println("Quantity of " + keyToEdit + " updated to " + newQuantity);
+
+                                    // Check if the primary Cheese needs to be updated
+                                    if (newQuantity == 1 && !keyToEdit.equals(sandwich.getCheese())) {
+                                        // Update primary Cheese string
+                                        sandwich.setCheese(keyToEdit);
+                                        System.out.println("Primary Cheese set to " + keyToEdit);
+                                    }
+                                }
+                                break; // Exit the loop if input is valid
+                            } else {
+                                System.out.println("Invalid quantity. Please enter a non-negative number.");
+                            }
                         }
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Invalid input. Please enter a number.");
                     }
-                    break;
-                case 2:
-                    while (true) {
-                        try {
-                            System.out.println("---Edit Bread---");
-                            System.out.println("Current Bread: " + sandwich.getBread());
-                            System.out.println("---------------");
-                            UserInterface.displayWithNumbers(menu.getBreadList());
-                            int newBread = Integer.parseInt(scanner.nextLine());
-                            sandwich.setBread(menu.getBreadList().get(newBread - 1));
-                            System.out.println("New Bread: " + sandwich.getBread());
-                            break;
-                        }
-                        catch (Exception ex){
-                            System.out.println("PLease choose a bread from the list.");
-                        }
+                }
+                break;
+            case 5:
+                while (true) {
+                    try {
+                        System.out.println("---Edit Other Toppings---");
+                        break;
+                    } catch (Exception ex) {
+                        System.out.println("PLease choose a bread from the list.");
                     }
-                    break;
-                case 3:
-                    //Meat
-                    break;
-                case 4:
-                    //Cheese
-                    break;
-                case 5:
-                    //Other Toppings
-                    break;
-                case 6:
-                    //Sauces
-                    break;
-                case 7:
-                    // Sides
-                    break;
-                case 8:
-                    break;
-            }
+                }
+                //Other Toppings
+                break;
+            case 6:
+                while (true) {
+                    try {
+                        System.out.println("---Edit Sauces---");
+                        break;
+                    } catch (Exception ex) {
+                        System.out.println("PLease choose a bread from the list.");
+                    }
+                }
+                //Sauces
+                break;
+            case 7:
+                while (true) {
+                    try {
+                        System.out.println("---Edit Sides---");
+                        break;
+                    } catch (Exception ex) {
+                        System.out.println("PLease choose a bread from the list.");
+                    }
+                }
+                // Sides
+                break;
+            case 8:
+                while (true) {
+                    try {
+                        break;
+                    } catch (Exception ex) {
+                        System.out.println("PLease choose a bread from the list.");
+                    }
+                }
+                break;
+        }
 
 
     }
@@ -540,6 +794,56 @@ public class Sandwich {
 
 
         return sb.toString();
+    }
+
+    private ArrayList<String> mapToArrayListNoPrice(HashMap<String, Integer> map) {
+
+        ArrayList<String> keys = new ArrayList<>();
+        //int maxDescriptionLength = 0;
+
+
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            String formatKey = entry.getKey() + " * " + entry.getValue();
+            if (entry.getValue() > 1) {
+                keys.add(formatKey);
+            } else if (entry.getValue() == 1) {
+                keys.add(entry.getKey());
+            }
+        }
+
+
+//        for (int i = 0; i < keys.size(); i++) {
+//            String key = keys.get(i);
+//            String modifiedKey;
+//            String number = "1";
+//            if (key.matches(".*\\*\\s*\\d+.*")) {
+//                modifiedKey = keys.get(i).replaceAll("(.*?)\\*\\s*\\d+", "$1"); // Replace "* number" with an empty string
+//                number = keys.get(i).replaceAll(".*\\*\\s*(\\d+).*", "$1"); // Extract the number
+//                modifiedKey = modifiedKey.trim();
+//            } else {
+//                modifiedKey = keys.get(i);
+//            }
+//            if (menu.getMeatList().contains(modifiedKey)) {
+//                int meatNumber = sumHashMapValues(extraMeat);
+//                BigDecimal sandwichExtraMeatPrice = getExtraMeatPrice().divide(BigDecimal.valueOf(meatNumber), RoundingMode.HALF_UP);
+//                BigDecimal priceForExtraMeat = sandwichExtraMeatPrice.multiply(BigDecimal.valueOf(Long.parseLong(number)));
+//
+//                sb.append(formatDescription(keys.get(i), priceForExtraMeat, maxDescriptionLength)).append("\n");
+//
+//            } else if (menu.getCheeseList().contains(modifiedKey)) {
+//                int cheeseNumber = sumHashMapValues(extraCheese);
+//                BigDecimal sandwichExtraCheesePrice = getExtraCheesePrice().divide(BigDecimal.valueOf(cheeseNumber), RoundingMode.HALF_UP);
+//                BigDecimal priceForExtraCheese = sandwichExtraCheesePrice.multiply(BigDecimal.valueOf(Long.parseLong(number)));
+//
+//                sb.append(formatDescription(keys.get(i), priceForExtraCheese, maxDescriptionLength)).append("\n");
+//            } else {
+//
+//                sb.append(formatDescription(keys.get(i), BigDecimal.valueOf(0), maxDescriptionLength)).append("\n");
+//            }
+//        }
+
+
+        return keys;
     }
 
     private String formatDescription(String description, BigDecimal price, int maxDescriptionLength) {
