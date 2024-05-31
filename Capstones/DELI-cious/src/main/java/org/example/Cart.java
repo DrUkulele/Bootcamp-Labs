@@ -3,6 +3,7 @@ package org.example;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Cart {
     //properties
@@ -10,6 +11,7 @@ public class Cart {
     private static List<Sandwich> sandwiches = new ArrayList<>();
     private static List<Drink> drinks = new ArrayList<>();
     private static List<Chip> chips = new ArrayList<>();
+    private Scanner scanner = new Scanner(System.in);
 
 
     public static BigDecimal getTotalPrice() {
@@ -29,7 +31,7 @@ public class Cart {
             totalPrice = totalPrice.add(drink.getDrinkPrice());
         }
         for (Chip chip : chips)
-            totalPrice = totalPrice.add(chip.getPrice());
+            totalPrice = totalPrice.add(chip.getTotalPrice());
         return totalPrice;
     }
 
@@ -67,7 +69,35 @@ public class Cart {
     }
 
     public <T> void removeItemFromCart(List<T> list, int index){
-        list.remove(index - 1);
+        if (list.equals(drinks)) {
+            for (Drink drink : drinks) {
+                int quantity = drink.getQuantity();
+                if (quantity > 1)
+                    System.out.print("Enter the quantity you wish to remove: ");
+                int quantityToRemove = Integer.parseInt(scanner.nextLine());
+                if (quantityToRemove >= drink.getQuantity()) {
+                    list.remove(index - 1);
+                } else {
+                    drink.setQuantity(quantity - quantityToRemove);
+                }
+            }
+        }
+       else if (list.equals(chips)) {
+            for (Chip chip : chips) {
+                int quantity = chip.getQuantity();
+                if (quantity > 1)
+                    System.out.print("Enter the quantity you wish to remove: ");
+                int quantityToRemove = Integer.parseInt(scanner.nextLine());
+                if (quantityToRemove >= chip.getQuantity()) {
+                    list.remove(index - 1);
+                } else {
+                    chip.setQuantity(quantity - quantityToRemove);
+                }
+            }
+        }
+        else {
+            list.remove(index - 1);
+        }
     }
 
 }

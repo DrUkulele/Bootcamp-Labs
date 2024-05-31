@@ -382,8 +382,8 @@ public class Sandwich {
 
     //method to edit a sandwich
     public static void editSandwich(Sandwich sandwich, int partToEdit) {
-        int itemToEdit = -1;
-        String keyToEdit = null;
+        int itemToEdit;
+        String keyToEdit;
         switch (partToEdit) {
             case 1:
                 while (true) {
@@ -650,20 +650,132 @@ public class Sandwich {
                 while (true) {
                     try {
                         System.out.println("---Edit Other Toppings---");
-                        break;
-                    } catch (Exception ex) {
-                        System.out.println("PLease choose a bread from the list.");
+                        HashMap<String, Integer> extraToppings = sandwich.getOtherToppings();
+
+                        // Check if there are any extra toppings
+                        if (!extraToppings.isEmpty()) {
+                            System.out.println("---Current Toppings---");
+                            UserInterface.displayList(sandwich.mapToArrayListNoPrice(extraToppings));
+                        }
+
+                        // Allow user to add toppings
+                        System.out.println("00) Add Topping");
+                        while (true) {
+                            try {
+                                System.out.println("---Pick Topping To Edit---");
+                                UserInterface.displayWithNumbers(sandwich.mapToArrayListNoPrice(extraToppings));
+
+                                 itemToEdit = Integer.parseInt(scanner.nextLine());
+
+                                if (itemToEdit == 0) {
+                                    System.out.println("Pick a topping to add");
+                                    UserInterface.displayWithNumbers(menu.getOtherToppingsList());
+                                    HashMap<String, Integer> selectedTopping = sandwich.pickItemWithQuantity(menu.getOtherToppingsList());
+
+                                    for (Map.Entry<String, Integer> entry : selectedTopping.entrySet()) {
+                                        String topping = entry.getKey();
+                                        Integer quantity = entry.getValue();
+
+                                        extraToppings.put(topping, extraToppings.getOrDefault(topping, 0) + quantity);
+                                    }
+
+                                    break;
+                                } else {
+                                    List<String> toppingList = new ArrayList<>(extraToppings.keySet());
+                                    if (itemToEdit >= 1 && itemToEdit <= toppingList.size()) {
+                                        String toppingToEdit = toppingList.get(itemToEdit - 1);
+                                        System.out.println("Topping to Edit: " + toppingToEdit);
+                                        System.out.print("Please enter new quantity: ");
+                                        int newQuantity = Integer.parseInt(scanner.nextLine());
+
+                                        if (newQuantity >= 0) {
+                                            extraToppings.put(toppingToEdit, newQuantity);
+
+                                            if (newQuantity == 0) {
+                                                extraToppings.remove(toppingToEdit);
+                                            }
+
+                                            break;
+                                        } else {
+                                            System.out.println("Invalid quantity. Please enter a non-negative number.");
+                                        }
+                                    } else {
+                                        System.out.println("Invalid selection.");
+                                    }
+                                }
+                            } catch (NumberFormatException ex) {
+                                System.out.println("Invalid input. Please enter a number.");
+                            }
+                        }
+                        break; // Exit the loop after handling other toppings
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Invalid input. Please enter a number.");
                     }
                 }
-                //Other Toppings
-                break;
             case 6:
                 while (true) {
                     try {
                         System.out.println("---Edit Sauces---");
-                        break;
-                    } catch (Exception ex) {
-                        System.out.println("PLease choose a bread from the list.");
+                        HashMap<String, Integer> extraSauces = sandwich.getSauces();
+
+                        // Check if there are any extra toppings
+                        if (!extraSauces.isEmpty()) {
+                            System.out.println("---Current Sauces---");
+                            UserInterface.displayList(sandwich.mapToArrayListNoPrice(extraSauces));
+                        }
+
+                        // Allow user to add toppings
+                        System.out.println("00) Add Sauces");
+                        while (true) {
+                            try {
+                                System.out.println("---Pick Sauces To Edit---");
+                                UserInterface.displayWithNumbers(sandwich.mapToArrayListNoPrice(extraSauces));
+
+                                itemToEdit = Integer.parseInt(scanner.nextLine());
+
+                                if (itemToEdit == 0) {
+                                    System.out.println("Pick a sauces to add");
+                                    UserInterface.displayWithNumbers(menu.getSaucesList());
+                                    HashMap<String, Integer> selectedTopping = sandwich.pickItemWithQuantity(menu.getSaucesList());
+
+                                    for (Map.Entry<String, Integer> entry : selectedTopping.entrySet()) {
+                                        String sauce = entry.getKey();
+                                        Integer quantity = entry.getValue();
+
+                                        extraSauces.put(sauce, extraSauces.getOrDefault(sauce, 0) + quantity);
+                                    }
+
+                                    break;
+                                } else {
+                                    List<String> saucesList = new ArrayList<>(extraSauces.keySet());
+                                    if (itemToEdit >= 1 && itemToEdit <= saucesList.size()) {
+                                        String saucesToEdit = saucesList.get(itemToEdit - 1);
+                                        System.out.println("Topping to Edit: " + saucesToEdit);
+                                        System.out.print("Please enter new quantity: ");
+                                        int newQuantity = Integer.parseInt(scanner.nextLine());
+
+                                        if (newQuantity >= 0) {
+                                            extraSauces.put(saucesToEdit, newQuantity);
+
+                                            if (newQuantity == 0) {
+                                                extraSauces.remove(saucesToEdit);
+                                            }
+
+                                            break;
+                                        } else {
+                                            System.out.println("Invalid quantity. Please enter a non-negative number.");
+                                        }
+                                    } else {
+                                        System.out.println("Invalid selection.");
+                                    }
+                                }
+                            } catch (NumberFormatException ex) {
+                                System.out.println("Invalid input. Please enter a number.");
+                            }
+                        }
+                        break; // Exit the loop after handling other toppings
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Invalid input. Please enter a number.");
                     }
                 }
                 //Sauces
@@ -672,21 +784,71 @@ public class Sandwich {
                 while (true) {
                     try {
                         System.out.println("---Edit Sides---");
-                        break;
-                    } catch (Exception ex) {
-                        System.out.println("PLease choose a bread from the list.");
+                        HashMap<String, Integer> extraSides = sandwich.getSides();
+
+                        // Check if there are any extra sides
+                        if (!extraSides.isEmpty()) {
+                            System.out.println("---Current Sides---");
+                            UserInterface.displayList(sandwich.mapToArrayListNoPrice(extraSides));
+                        }
+
+                        // Allow user to add sides
+                        System.out.println("00) Add Sides");
+                        while (true) {
+                            try {
+                                System.out.println("---Pick Sauces To Edit---");
+                                UserInterface.displayWithNumbers(sandwich.mapToArrayListNoPrice(extraSides));
+
+                                itemToEdit = Integer.parseInt(scanner.nextLine());
+
+                                if (itemToEdit == 0) {
+                                    System.out.println("Pick a side to add");
+                                    UserInterface.displayWithNumbers(menu.getSidesList());
+                                    HashMap<String, Integer> selectedSide = sandwich.pickItemWithQuantity(menu.getSidesList());
+
+                                    for (Map.Entry<String, Integer> entry : selectedSide.entrySet()) {
+                                        String side = entry.getKey();
+                                        Integer quantity = entry.getValue();
+
+                                        extraSides.put(side, extraSides.getOrDefault(side, 0) + quantity);
+                                    }
+
+                                    break;
+                                } else {
+                                    List<String> sideList = new ArrayList<>(extraSides.keySet());
+                                    if (itemToEdit >= 1 && itemToEdit <= sideList.size()) {
+                                        String sideToEdit = sideList.get(itemToEdit - 1);
+                                        System.out.println("Side to Edit: " + sideToEdit);
+                                        System.out.print("Please enter new quantity: ");
+                                        int newQuantity = Integer.parseInt(scanner.nextLine());
+
+                                        if (newQuantity >= 0) {
+                                            extraSides.put(sideToEdit, newQuantity);
+
+                                            if (newQuantity == 0) {
+                                                extraSides.remove(sideToEdit);
+                                            }
+
+                                            break;
+                                        } else {
+                                            System.out.println("Invalid quantity. Please enter a non-negative number.");
+                                        }
+                                    } else {
+                                        System.out.println("Invalid selection.");
+                                    }
+                                }
+                            } catch (NumberFormatException ex) {
+                                System.out.println("Invalid input. Please enter a number.");
+                            }
+                        }
+                        break; // Exit the loop after handling other toppings
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Invalid input. Please enter a number.");
                     }
                 }
                 // Sides
                 break;
-            case 8:
-                while (true) {
-                    try {
-                        break;
-                    } catch (Exception ex) {
-                        System.out.println("PLease choose a bread from the list.");
-                    }
-                }
+            case 0:
                 break;
         }
 
@@ -810,38 +972,6 @@ public class Sandwich {
                 keys.add(entry.getKey());
             }
         }
-
-
-//        for (int i = 0; i < keys.size(); i++) {
-//            String key = keys.get(i);
-//            String modifiedKey;
-//            String number = "1";
-//            if (key.matches(".*\\*\\s*\\d+.*")) {
-//                modifiedKey = keys.get(i).replaceAll("(.*?)\\*\\s*\\d+", "$1"); // Replace "* number" with an empty string
-//                number = keys.get(i).replaceAll(".*\\*\\s*(\\d+).*", "$1"); // Extract the number
-//                modifiedKey = modifiedKey.trim();
-//            } else {
-//                modifiedKey = keys.get(i);
-//            }
-//            if (menu.getMeatList().contains(modifiedKey)) {
-//                int meatNumber = sumHashMapValues(extraMeat);
-//                BigDecimal sandwichExtraMeatPrice = getExtraMeatPrice().divide(BigDecimal.valueOf(meatNumber), RoundingMode.HALF_UP);
-//                BigDecimal priceForExtraMeat = sandwichExtraMeatPrice.multiply(BigDecimal.valueOf(Long.parseLong(number)));
-//
-//                sb.append(formatDescription(keys.get(i), priceForExtraMeat, maxDescriptionLength)).append("\n");
-//
-//            } else if (menu.getCheeseList().contains(modifiedKey)) {
-//                int cheeseNumber = sumHashMapValues(extraCheese);
-//                BigDecimal sandwichExtraCheesePrice = getExtraCheesePrice().divide(BigDecimal.valueOf(cheeseNumber), RoundingMode.HALF_UP);
-//                BigDecimal priceForExtraCheese = sandwichExtraCheesePrice.multiply(BigDecimal.valueOf(Long.parseLong(number)));
-//
-//                sb.append(formatDescription(keys.get(i), priceForExtraCheese, maxDescriptionLength)).append("\n");
-//            } else {
-//
-//                sb.append(formatDescription(keys.get(i), BigDecimal.valueOf(0), maxDescriptionLength)).append("\n");
-//            }
-//        }
-
 
         return keys;
     }

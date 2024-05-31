@@ -121,7 +121,7 @@ public class UserInterface {
                         sandwich.setSize(Sandwich.pickItemNoQuantity(menu.getSizeList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
-                        System.out.println("Error selecting sandwich size: " + ex.getMessage());
+                        System.out.println("Error selecting sandwich size.");
                     }
                 }
 
@@ -133,7 +133,7 @@ public class UserInterface {
                         sandwich.setBread(Sandwich.pickItemNoQuantity(menu.getBreadList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
-                        System.out.println("Error selecting bread: " + ex.getMessage());
+                        System.out.println("Error selecting bread.");
                     }
                 }
 
@@ -145,7 +145,7 @@ public class UserInterface {
                         sandwich.setExtraMeat(sandwich.pickItemWithQuantity(menu.getMeatList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
-                        System.out.println("Error selecting meat: " + ex.getMessage());
+                        System.out.println("Error selecting meat.");
                     }
                 }
 
@@ -157,7 +157,7 @@ public class UserInterface {
                         sandwich.setExtraCheese(sandwich.pickItemWithQuantity(menu.getCheeseList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
-                        System.out.println("Error selecting cheese: " + ex.getMessage());
+                        System.out.println("Error selecting cheese.");
                     }
                 }
 
@@ -169,7 +169,7 @@ public class UserInterface {
                         sandwich.setOtherToppings(sandwich.pickItemWithQuantity(menu.getOtherToppingsList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
-                        System.out.println("Error selecting other toppings: " + ex.getMessage());
+                        System.out.println("Error selecting other toppings.");
                     }
                 }
 
@@ -181,7 +181,7 @@ public class UserInterface {
                         sandwich.setSauces(sandwich.pickItemWithQuantity(menu.getSaucesList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
-                        System.out.println("Error selecting sauces: " + ex.getMessage());
+                        System.out.println("Error selecting sauces.");
                     }
                 }
 
@@ -193,7 +193,7 @@ public class UserInterface {
                         sandwich.setSides(sandwich.pickItemWithQuantity(menu.getSidesList()));
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
-                        System.out.println("Error selecting sides: " + ex.getMessage());
+                        System.out.println("Error selecting sides.");
                     }
                 }
 
@@ -216,7 +216,7 @@ public class UserInterface {
                         }
                         break; // Exit the loop if selection is successful
                     } catch (Exception ex) {
-                        System.out.println("Error selecting toasted: " + ex.getMessage());
+                        System.out.println("Error selecting toasted.");
                     }
                 }
 
@@ -225,15 +225,16 @@ public class UserInterface {
                 System.out.println("Toasted: " + (toasted ? "Yes" : "No"));
 
                 // Creating a new sandwich object
-                sandwich = new Sandwich(sandwich.getSize(), sandwich.getBread(), sandwich.getMeat(),
+                Sandwich newsandwich = new Sandwich(sandwich.getSize(), sandwich.getBread(), sandwich.getMeat(),
                         sandwich.getCheese(), sandwich.getExtraMeat(), sandwich.getExtraCheese(), sandwich.getOtherToppings(), sandwich.getSauces(),
                         sandwich.getSides(), sandwich.isToasted(), sandwich.getTotalSandwichPrice());
-                cart.addSandwich(sandwich);
+                cart.addSandwich(newsandwich);
+
 
                 // If all steps are successful, exit the method
                 break;
             } catch (Exception ex) {
-                System.out.println("Error adding sandwich: " + ex.getMessage());
+                System.out.println("Error adding sandwich.");
             }
         }
     }
@@ -257,7 +258,7 @@ public class UserInterface {
 
                 break;
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE!");
+                System.out.println("Error adding drink.");
             }
         }
     }
@@ -278,7 +279,7 @@ public class UserInterface {
 
                 break;
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE!");
+                System.out.println("Error adding chips");
 
             }
         }
@@ -307,9 +308,11 @@ public class UserInterface {
                         break;
                     case 3:
                         //method to edit a drink, after displaying all current drinks
+                        editDrink();
                         break;
                     case 4:
                         //method to edit chips, after displaying all current chips
+                        editChips();
                         break;
                     case 0:
                         System.out.println("Returning to Order Screen");
@@ -319,7 +322,7 @@ public class UserInterface {
                         break;
                 }
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE!");
+                System.out.println("An error has occurred please try again.");
             }
         }
     }
@@ -334,7 +337,7 @@ public class UserInterface {
                 sandwichToEdit = Integer.parseInt(scanner.nextLine()) - 1;
                 break;
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE");
+                System.out.println("Please chooses a valid option.");
             }
         }
         while (true) {
@@ -357,7 +360,7 @@ public class UserInterface {
                     Sandwich.editSandwich(cart.getSandwiches().get(sandwichToEdit), optionToEdit);
                 }
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE");
+                System.out.println("Please chooses a valid option.");
             }
         }
     }
@@ -372,7 +375,7 @@ public class UserInterface {
                 drinkToEdit = Integer.parseInt(scanner.nextLine()) - 1;
                 break;
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE");
+                System.out.println("Please chooses a valid option.");
             }
         }
         while (true) {
@@ -381,21 +384,16 @@ public class UserInterface {
                 System.out.println();
                 System.out.println("""
                         1) Size
-                        2) Bread
-                        3) Meat
-                        4) Cheese
-                        5) Other Toppings
-                        6) Sauces
-                        7) Sides
+                        2) Flavor
                         0) Go Back""");
                 int optionToEdit = Integer.parseInt(scanner.nextLine());
                 if (optionToEdit == 0) {
                     break;
                 } else {
-                    Sandwich.editSandwich(cart.getSandwiches().get(drinkToEdit), optionToEdit);
+                    Drink.editDrink(cart.getDrinks().get(drinkToEdit), optionToEdit);
                 }
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE");
+                System.out.println("Please chooses a valid option.");
             }
         }
     }
@@ -408,9 +406,10 @@ public class UserInterface {
                 displayWithNumbers(cart.getChips());
                 System.out.print("Please chose which chips you would like to edit: ");
                 chipsToEdit = Integer.parseInt(scanner.nextLine()) - 1;
+                Chip.editChips(cart.getChips().get(chipsToEdit));
                 break;
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE");
+                System.out.println("Please chooses a valid option.");
             }
         }
     }
@@ -431,21 +430,30 @@ public class UserInterface {
                 switch (optionPicker()) {
                     case 1:
                         displayWithNumbers(cart.getSandwiches());
-                        System.out.print("Please pick the number of the Sandwich you wish to remove: ");
+                        System.out.print("Please pick the number of the Sandwich you wish to remove(0 to go back): ");
                         index = Integer.parseInt(scanner.nextLine());
-                        cart.removeItemFromCart(cart.getSandwiches(), index);
-                        break;
+                        if (index == 0) {
+                            removeItem = false;
+                        }
+                    cart.removeItemFromCart(cart.getSandwiches(), index);
+                    break;
                     case 2:
                         displayWithNumbers(cart.getDrinks());
-                        System.out.print("Please pick the number of the Drink you wish to remove: ");
+                        System.out.print("Please pick the number of the Drink you wish to remove(0 to go back): ");
                         index = Integer.parseInt(scanner.nextLine());
+                        if (index == 0) {
+                            removeItem = false;
+                        }
                         cart.removeItemFromCart(cart.getDrinks(), index);
                         break;
                     case 3:
                         displayWithNumbers(cart.getChips());
-                        System.out.print("Please pick the number of the Chips you wish to remove: ");
+                        System.out.print("Please pick the number of the Chips you wish to remove(0 to go back): ");
                         index = Integer.parseInt(scanner.nextLine());
                         cart.removeItemFromCart(cart.getChips(), index);
+                        if (index == 0) {
+                            removeItem = false;
+                        }
                         break;
                     case 0:
                         System.out.println("Returning to Edit Order Screen");
@@ -456,7 +464,7 @@ public class UserInterface {
                 }
 
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE");
+                System.out.println("Please chooses a valid option.");
             }
         }
     }
@@ -488,7 +496,7 @@ public class UserInterface {
                 }
                 break;
             } catch (Exception ex) {
-                System.out.println("ADD ERROR MESSAGE HERE!");
+                System.out.println("Error occurred while checking out.");
             }
 
 
