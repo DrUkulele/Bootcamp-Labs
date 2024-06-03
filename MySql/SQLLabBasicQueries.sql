@@ -84,7 +84,7 @@ Select *
 From products
 Where SupplierID;
 
-Select ProductName 
+Select *
 From products
 Where SupplierID = 4;
 
