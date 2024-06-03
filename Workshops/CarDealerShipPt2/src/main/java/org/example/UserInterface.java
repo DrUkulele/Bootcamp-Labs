@@ -352,6 +352,7 @@ public class UserInterface {
 
     //finalize sales contract
     public static void finalizeContract(int vin, Contract contract) {
+        //put in while true
         if (contract instanceof SalesContract) {
             System.out.println("""
                     Would you like to finalize the contract?
