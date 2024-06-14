@@ -27,17 +27,17 @@ public class SalesContractRepository {
         basicDataSource.setPassword(password);
     }
 
-    public Vehicle getVehicleSaleContract(int vehicleVin1) {
-        String query = "{Call isVehicleSales(?)}";
+    public Vehicle getVehicleSaleContract(int vehicleVin) {
+        String query = "{CALL isVehicleSales(?)}";
         Vehicle vehicle = null;
 
         try (Connection conn = basicDataSource.getConnection(); CallableStatement cs = conn.prepareCall(query)) {
-            cs.setInt(1, vehicleVin1);
+            cs.setInt(1, vehicleVin);
             ResultSet rs = cs.executeQuery();
 
-
-                int vehicleVin = rs.getInt("VehicleVin");
-                int year = rs.getInt("Year");
+            if (rs.next()) {
+                int vin = rs.getInt("VehicleVin");
+                int year = rs.getInt("Year"); // Adjusted column name
                 String make = rs.getString("Make");
                 String model = rs.getString("Model");
                 String type = rs.getString("Type");
@@ -45,12 +45,16 @@ public class SalesContractRepository {
                 int odometer = rs.getInt("Odometer");
                 double price = rs.getDouble("Price");
                 boolean sold = rs.getBoolean("Sold");
-                vehicle = new Vehicle(vehicleVin, year, make, model, type, color, odometer, price, sold);
 
+                vehicle = new Vehicle(vin, year, make, model, type, color, odometer, price, sold);
+            } else {
+                vehicle = null; // Handle case where no record is found
+            }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error retrieving vehicle sale contract: " + e.getMessage(), e);
         }
+
         return vehicle;
     }
 
