@@ -1,24 +1,29 @@
 package org.example;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class LeaseContract extends Contract {
     //properties
-    private int leaseContractID;
+    @Getter
     private BigDecimal vehiclePrice = BigDecimal.valueOf(getVehicleSold().getPrice());
-    private BigDecimal leaseFee; //(7% of original price)
-    private BigDecimal interestRate = new BigDecimal("0.04");
-    private final BigDecimal leaseTerm = new BigDecimal("36") ;
     private BigDecimal expectedEndingValue; //(50% of original price) could do / 2 but easier to convert using * 0.5 with Big Decimal
+    private BigDecimal leaseFee; //(7% of original price)
+    @Getter
+    private BigDecimal intrestRate = new BigDecimal("0.04");
+    @Getter
+    private final BigDecimal leaseTerm = new BigDecimal("36") ;
+
+    //constructor
+    public LeaseContract(String customerName, String customerEmail, Vehicle vehicleSold) {
+        super(customerName, customerEmail, vehicleSold);
+
+    }
 
     //getters and setters
     public BigDecimal getExpectedEndingValue() {
@@ -26,9 +31,17 @@ public class LeaseContract extends Contract {
         return expectedEndingValue;
     }
 
+    public void setExpectedEndingValue(BigDecimal expectedEndingValue) {
+        this.expectedEndingValue = expectedEndingValue;
+    }
+
     public BigDecimal getLeaseFee() {
         leaseFee = vehiclePrice.multiply(BigDecimal.valueOf(.07));
         return leaseFee;
+    }
+
+    public void setLeaseFee(BigDecimal leaseFee) {
+        this.leaseFee = leaseFee;
     }
 
     //methods
@@ -56,7 +69,7 @@ public class LeaseContract extends Contract {
         BigDecimal expectedEndingValue = vehiclePrice.multiply(BigDecimal.valueOf(.5)); //(original price * .5) = expected ending value
         BigDecimal leaseFee = vehiclePrice.multiply(BigDecimal.valueOf(.07)); // (original price * 0.07) = lease fee
         BigDecimal depreciationFee = (vehiclePrice.subtract(expectedEndingValue)).divide(leaseTerm, RoundingMode.HALF_UP); //((original price - expected ending value) / lease term) = depreciation fee
-        BigDecimal moneyFactor = interestRate.divide(BigDecimal.valueOf(2400), mcMoneyFactor);
+        BigDecimal moneyFactor = intrestRate.divide(BigDecimal.valueOf(2400), mcMoneyFactor);
         BigDecimal financeFee = (vehiclePrice.add(expectedEndingValue)).multiply(moneyFactor);
         BigDecimal leaseFeePerMonth = leaseFee.divide(leaseTerm, RoundingMode.HALF_UP);
 

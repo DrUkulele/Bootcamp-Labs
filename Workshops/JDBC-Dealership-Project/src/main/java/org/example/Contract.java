@@ -1,16 +1,9 @@
 package org.example;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public abstract class Contract {
     //properties
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -24,6 +17,14 @@ public abstract class Contract {
 
     //constructor
 
+    public Contract(String customerName, String customerEmail, Vehicle vehicleSold) {
+        this.date = date;
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
+        this.vehicleSold = vehicleSold;
+        this.totalPrice = totalPrice;
+        this.monthlyPayment = monthlyPayment;
+    }
 
     //getters and setters
     public String getDate() {
@@ -31,6 +32,33 @@ public abstract class Contract {
         return date;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
+    public Vehicle getVehicleSold() {
+        return vehicleSold;
+    }
+
+    public void setVehicleSold(Vehicle vehicleSold) {
+        this.vehicleSold = vehicleSold;
+    }
 
     //methods
     public abstract BigDecimal getTotalPrice();

@@ -7,14 +7,11 @@ import java.util.Scanner;
 
 public class UserInterface {
     private static final Scanner scanner = new Scanner(System.in);
-    private static Dealership dealership;
-    private int dealershipId = 1;
-//    public static Dealership getDealership() { dealership = DealershipFileManager.getDealership();
-//        return dealership;
-//    }
+    private static Dealership dealership = new Dealership();
 
-    public void userInterface(DealershipRepository dr, VehicleRepository vr, SalesContractRepository sr, LeaseContractRepository lr ) {
-//        System.out.println("Hello and Welcome to your " + dealership.getName() + " Dealership!");
+
+    public  void userInterface() {
+        System.out.println("Hello and Welcome to your " + dealership.getName() + " Dealership!");
 
         while (true) {
             try {
@@ -35,15 +32,15 @@ public class UserInterface {
                 switch (choice) {
                     case 1:
                         System.out.println("Please answer the following questions: ");
-                        processGetByPriceRequest(vr);
+                        processGetByPriceRequest();
                         break;
                     case 2:
                         System.out.println("Please answer the following questions: ");
-                        processGetByMakeModelRequest(vr);
+                        processGetByMakeModelRequest();
                         break;
                     case 3:
                         System.out.println("Please answer the following questions: ");
-                        processGetByYearRequest(vr);
+                        processGetByYearRequest();
                         break;
                     case 4:
                         System.out.println("Please answer the following questions: ");
@@ -59,18 +56,18 @@ public class UserInterface {
                         break;
                     case 7:
                         System.out.println("Here is a list of all vehicles! ");
-                        display(vr.getAllVehicles(dealershipId));
+                        processGetAllVehicleRequest();
                         break;
                     case 8:
-//                        System.out.println("Please answer the following questions: ");
-//                        processAddVehicleRequest();
-//                        break;
-//                    case 9:
-//                        System.out.println("Please enter the vehicle vin you would like to remove: ");
-//                        processRemoveVehicle();
-//                        break;
-//                    case 10:
-//                        findCar();
+                        System.out.println("Please answer the following questions: ");
+                        processAddVehicleRequest();
+                        break;
+                    case 9:
+                        System.out.println("Please enter the vehicle vin you would like to remove: ");
+                        processRemoveVehicle();
+                        break;
+                    case 10:
+                        findCar();
 
                         break;
                     case 0:
@@ -93,7 +90,7 @@ public class UserInterface {
     public static void display(List<Vehicle> vehicles) {
         int counter = 0;
         for (Vehicle vehicle : vehicles) {
-            System.out.printf("Vin: %s|Year: %d|Make: %s|Model: %s|Type: %s|Color: %s|Odometer: %d|Price: %.2f\n", vehicle.getVin(), vehicle.getYear(), vehicle.getVehicleMake(), vehicle.getVehicleModel(), vehicle.getVehicleType(), vehicle.getColor(), vehicle.getOdometer(), vehicle.getPrice());
+            System.out.printf("Vin: %s|Year: %d|Make: %s|Model: %s|Type: %s|Color: %s|Odometer: %d|Price: %.2f|Sold: %b\n", vehicle.getVin(), vehicle.getYear(), vehicle.getVehicleMake(), vehicle.getVehicleModel(), vehicle.getVehicleType(), vehicle.getColor(), vehicle.getOdometer(), vehicle.getPrice(),  vehicle.isSold());
             counter++;
         }
         if (counter == 0) {
@@ -103,7 +100,7 @@ public class UserInterface {
     }
 
     //method for price
-    public void processGetByPriceRequest(VehicleRepository vr) {
+    public static void processGetByPriceRequest() {
         while (true) {
             try {
                 System.out.print("What would be the min price? $");
@@ -111,7 +108,9 @@ public class UserInterface {
                 System.out.print("What would be the max price? $");
                 double maxPrice = Double.parseDouble(scanner.nextLine());
 
-                display(vr.getVehiclesByPriceRange(dealershipId, minPrice, maxPrice));
+                List<Vehicle> vehiclesByPrice = dealership.getVehiclesByPrice(minPrice, maxPrice);
+
+                display(vehiclesByPrice);
                 break;
             } catch (NumberFormatException exception) {
                 System.out.println("----------⚠ Please enter price in number format! ⚠----------");
@@ -120,7 +119,7 @@ public class UserInterface {
     }
 
     //method for make and model
-    public void processGetByMakeModelRequest(VehicleRepository vr) {
+    public static void processGetByMakeModelRequest() {
         while (true) {
             try {
                 System.out.println("What would be the make and model of the car? ");
@@ -129,7 +128,9 @@ public class UserInterface {
                 System.out.print("Model: ");
                 String vehicleModel = scanner.nextLine();
 
-                display(vr.getVehiclesByMakeAndModel(dealershipId, vehicleMake, vehicleModel));
+                List<Vehicle> vehiclesByMakeAndModel = dealership.getVehiclesByMakeModel(vehicleMake, vehicleModel);
+
+                display(vehiclesByMakeAndModel);
                 break;
             } catch (Exception exception) {
                 System.out.println("----------⚠ Please try again! ⚠----------");
@@ -138,15 +139,17 @@ public class UserInterface {
     }
 
     //Method to process request to find vehicles by year range
-    public void processGetByYearRequest(VehicleRepository vr) {
+    public static void processGetByYearRequest() {
         while (true) {
             try {
-                System.out.print("Min year: ");
-                int minYear = Integer.parseInt(scanner.nextLine());
-                System.out.print("Max year: ");
-                int maxYear = Integer.parseInt(scanner.nextLine());
+                System.out.print("What would be the min year? ");
+                int minYear = scanner.nextInt();
+                System.out.print("What would be the max year? ");
+                int maxYear = scanner.nextInt();
 
-                display(vr.getVehiclesByYearRange(dealershipId, minYear, maxYear));
+                List<Vehicle> vehiclesByYear = dealership.getVehiclesByYear(minYear, maxYear);
+
+                display(vehiclesByYear);
                 break;
             } catch (NumberFormatException exception) {
                 System.out.println("----------⚠ Please enter year in number format! ⚠----------");
@@ -212,200 +215,191 @@ public class UserInterface {
     }
 
     //method for adding vehicles
-//    public static void processAddVehicleRequest() {
-//        while (true) {
-//            try {
-//                System.out.print("Please enter the vin: ");
-//                int vehicleVin = Integer.parseInt(scanner.nextLine());
-//
-//                System.out.print("Please enter the year? ");
-//                int vehicleYear = Integer.parseInt(scanner.nextLine());
-//
-//                System.out.print("Please enter the vehicle make: ");
-//                String vehicleMake = scanner.nextLine();
-//
-//                System.out.print("Please enter the vehicle model: ");
-//                String vehicleModel = scanner.nextLine();
-//
-//                System.out.print("Please enter the vehicle type: ");
-//                String vehicleType = scanner.nextLine();
-//
-//                System.out.print("Please enter the vehicle color: ");
-//                String vehicleColor = scanner.nextLine();
-//
-//                System.out.print("Please enter the vehicle's odometer: ");
-//                int vehicleOdometer = Integer.parseInt(scanner.nextLine());
-//
-//                System.out.print("Please enter the vehicle price: ");
-//                double vehiclePrice = Double.parseDouble(scanner.nextLine());
-//
-//                Vehicle addedVehicle = new Vehicle(vehicleVin, vehicleYear, vehicleModel, vehicleMake, vehicleType, vehicleColor, vehicleOdometer, vehiclePrice);
-//                dealership.addVehicle(addedVehicle);
-//                break;
-//            } catch (NumberFormatException exception) {
-//                System.out.println("----------⚠ Please enter valid information! ⚠----------");
-//            }
-//        }
-//    }
+    public static void processAddVehicleRequest() {
+        while (true) {
+            try {
+                System.out.print("Please enter the vin: ");
+                int vehicleVin = Integer.parseInt(scanner.nextLine());
+
+                System.out.print("Please enter the year? ");
+                int vehicleYear = Integer.parseInt(scanner.nextLine());
+
+                System.out.print("Please enter the vehicle make: ");
+                String vehicleMake = scanner.nextLine();
+
+                System.out.print("Please enter the vehicle model: ");
+                String vehicleModel = scanner.nextLine();
+
+                System.out.print("Please enter the vehicle type: ");
+                String vehicleType = scanner.nextLine();
+
+                System.out.print("Please enter the vehicle color: ");
+                String vehicleColor = scanner.nextLine();
+
+                System.out.print("Please enter the vehicle's odometer: ");
+                int vehicleOdometer = Integer.parseInt(scanner.nextLine());
+
+                System.out.print("Please enter the vehicle price: ");
+                double vehiclePrice = Double.parseDouble(scanner.nextLine());
+                boolean sold = false;
+
+                Vehicle addedVehicle = new Vehicle(vehicleVin, vehicleYear, vehicleMake, vehicleModel, vehicleType, vehicleColor, vehicleOdometer, vehiclePrice, sold);
+                dealership.addVehicle(addedVehicle);
+                break;
+            } catch (NumberFormatException exception) {
+                System.out.println("----------⚠ Please enter valid information! ⚠----------");
+            }
+        }
+    }
 
     //method for removing vehicles
-//    public static void processRemoveVehicle() {
-//        while (true) {
-//            try {
-//                System.out.print("Please enter the vin: ");
-//                int vehicleVin = Integer.parseInt(scanner.nextLine());
-//
-//                dealership.removeVehicle(vehicleVin);
-//                break;
-//            } catch (NumberFormatException exception) {
-//                System.out.println("----------⚠ Please enter a number! ⚠----------");
-//            }
-//        }
-//    }
+    public static void processRemoveVehicle() {
+        while (true) {
+            try {
+                System.out.print("Please enter the vin: ");
+                int vehicleVin = Integer.parseInt(scanner.nextLine());
 
-//    //method for getting the contract type
-//    public static void contractType(int vin) {
-//        while (true) {
-//            try {
-//                Vehicle isAvalible = dealership.carIsAvalivble(vin);
-//                System.out.println("""
-//                        What type of contract would you like to create.
-//                        1) Sales Contract
-//                        2) Lease Contract
-//                        3) Back""");
-//                int option = Integer.parseInt(scanner.nextLine());
-//                switch (option) {
-//                    case 1:
-//                        createSalesContract(vin, isAvalible);
-//                        break;
-//                    case 2:
-//                        createLeaseContract(vin, isAvalible);
-//                        break;
-//                    case 3:
-//                        userInterface();
-//                        break;
-//                }
-//                break;
-//            } catch (NumberFormatException ex) {
-//                System.out.println("Please enter your option as a number.");
-//            }
-//        }
-//    }
+                dealership.removeVehicle(vehicleVin);
+                break;
+            } catch (NumberFormatException exception) {
+                System.out.println("----------⚠ Please enter a number! ⚠----------");
+            }
+        }
+    }
+
+    //method for getting the contract type
+    public void contractType(int vin) {
+        while (true) {
+            try {
+                Vehicle isAvalible = dealership.carIsAvalivble(vin);
+                System.out.println("""
+                        What type of contract would you like to create.
+                        1) Sales Contract
+                        2) Lease Contract
+                        3) Back""");
+                int option = Integer.parseInt(scanner.nextLine());
+                switch (option) {
+                    case 1:
+                        createSalesContract(vin, isAvalible);
+                        break;
+                    case 2:
+                        createLeaseContract(vin, isAvalible);
+                        break;
+                    case 3:
+
+                        break;
+                }
+                break;
+            } catch (NumberFormatException ex) {
+                System.out.println("Please enter your option as a number.");
+            }
+        }
+    }
 
     //method for Selling a vehicle
-//    public static void createSalesContract(int vin, Vehicle vehicle) {
-//        while (true) {
-//            try {
-//                boolean finance = true;
-//                System.out.println("Customers name: ");
-//                String customerName = scanner.nextLine();
-//                System.out.println("Customers email: ");
-//                String customerEmail = scanner.nextLine();
-//                System.out.println("""
-//                        Would you like to finance?
-//                        1) Yes
-//                        2) No""");
-//                int option = Integer.parseInt(scanner.nextLine());
-//                if (option == 2) {
-//                    finance = false;
-//                    SalesContract salesContract = new SalesContract(customerName, customerEmail, vehicle, finance);
-//                    System.out.printf("The Total price for the " + vehicle.getYear() + " " + vehicle.getVehicleModel() + " " + vehicle.getVehicleMake() + " will be:\n Total Price: %.2f\n", salesContract.getTotalPrice());
-//                    finalizeContract(vin, salesContract);
-//                    break;
-//
-//                }
-//                SalesContract salesContract = new SalesContract(customerName, customerEmail, vehicle, finance);
-//                System.out.printf("The total Monthly payment and Total price for the " + vehicle.getYear() + " " + vehicle.getVehicleModel() + " " + vehicle.getVehicleMake() + " will be:\n Monthly Payment: %.2f \n Total Price: %.2f\n", salesContract.getMonthlyPayment(), salesContract.getTotalPrice());
-//                finalizeContract(vin, salesContract);
-//                break;
-//
-//
-//            } catch (NumberFormatException ex) {
-//                System.out.println("Please enter your option as a number");
-//            }
-//        }
-//    }
+    public static void createSalesContract(int vin, Vehicle vehicle) {
+        while (true) {
+            try {
+                boolean finance = true;
+                System.out.println("Customers name: ");
+                String customerName = scanner.nextLine();
+                System.out.println("Customers email: ");
+                String customerEmail = scanner.nextLine();
+                System.out.println("""
+                        Would you like to finance?
+                        1) Yes
+                        2) No""");
+                int option = Integer.parseInt(scanner.nextLine());
+                if (option == 2) {
+                    finance = false;
+                    SalesContract salesContract = new SalesContract(customerName, customerEmail, vehicle, finance);
+                    System.out.printf("The Total price for the " + vehicle.getYear() + " " + vehicle.getVehicleModel() + " " + vehicle.getVehicleMake() + " will be:\n Total Price: %.2f\n", salesContract.getTotalPrice());
+                    finalizeContract(vin, salesContract);
+                    break;
+
+                }
+                SalesContract salesContract = new SalesContract(customerName, customerEmail, vehicle, finance);
+                System.out.printf("The total Monthly payment and Total price for the " + vehicle.getYear() + " " + vehicle.getVehicleModel() + " " + vehicle.getVehicleMake() + " will be:\n Monthly Payment: %.2f \n Total Price: %.2f\n", salesContract.getMonthlyPayment(), salesContract.getTotalPrice());
+                finalizeContract(vin, salesContract);
+                break;
+
+
+            } catch (NumberFormatException ex) {
+                System.out.println("Please enter your option as a number");
+            }
+        }
+    }
 
     //method for leasing vehicles
-//    public static void createLeaseContract(int vin, Vehicle vehicle) {
-//        while (true) {
-//            try {
-//                System.out.println("Customers name: ");
-//                String customerName = scanner.nextLine();
-//                System.out.println("Customers email: ");
-//                String customerEmail = scanner.nextLine();
-//                LeaseContract leaseContract = new LeaseContract(customerName, customerEmail, vehicle);
-//                System.out.printf("The total Monthly payment and Total price for the " + vehicle.getYear() + " " + vehicle.getVehicleModel() + " " + vehicle.getVehicleMake() + " will be:\n Monthly Payment: %.2f \n Total Price: %.2f\n", leaseContract.getMonthlyPayment(), leaseContract.getTotalPrice());
-//                finalizeContract(vin, leaseContract);
-//                break;
-//            } catch (UnsupportedOperationException ex) {
-//                System.out.println("Something went wrong.\n Please Try Again!");
-//            }
-//        }
-//    }
-//
-//    //finalize sales contract
-//    public static void finalizeContract(int vin, Contract contract) {
-//        //put in while true
-//        if (contract instanceof SalesContract) {
-//            System.out.println("""
-//                    Would you like to finalize the contract?
-//                    1) Yes
-//                    2) No""");
-//            int option = Integer.parseInt(scanner.nextLine());
-//            switch (option) {
-//                case 1:
-//                    ContractFileManager.saveContracts(contract);
-//                    dealership.removeVehicle(vin);
-//                    System.out.println("Vehicle Sold!");
-//                    break;
-//                case 2:
-//                    System.out.println("Contract Canceled. Returning to home screen.");
-//                    userInterface();
-//                    break;
-//            }
-//        }
-//        if (contract instanceof LeaseContract) {
-//            System.out.println("""
-//                    Would you like to finalize the contract?
-//                    1) Yes
-//                    2) No""");
-//            int option = Integer.parseInt(scanner.nextLine());
-//            switch (option) {
-//                case 1:
-//                    ContractFileManager.saveContracts(contract);
-//                    dealership.removeVehicle(vin);
-//                    System.out.println("Vehicle Leased!");
-//                    break;
-//                case 2:
-//                    System.out.println("Contract Canceled. Returning to home screen.");
-//                    userInterface();
-//                    break;
-//
-//            }
-//        }
-//
-//    }
-//    public static void findCar() {
-//        while (true) {
-//            try {
-//                System.out.println("Please enter the Vin number of the car you wish to Create the Contract for: ");
-//                int vin = Integer.parseInt(scanner.nextLine());
-//                if (dealership.carIsAvalivble(vin) != null) {
-//                    contractType(vin);
-//                    break;
-//                } else {
-//                    System.out.println("Car not found.");
-//                }
-//            } catch (NumberFormatException ex) {
-//                System.out.println("Enter vin as a number");
-//            }
-//        }
-//    }
+    public static void createLeaseContract(int vin, Vehicle vehicle) {
+        while (true) {
+            try {
+                System.out.println("Customers name: ");
+                String customerName = scanner.nextLine();
+                System.out.println("Customers email: ");
+                String customerEmail = scanner.nextLine();
+                LeaseContract leaseContract = new LeaseContract(customerName, customerEmail, vehicle);
+                System.out.printf("The total Monthly payment and Total price for the " + vehicle.getYear() + " " + vehicle.getVehicleModel() + " " + vehicle.getVehicleMake() + " will be:\n Monthly Payment: %.2f \n Total Price: %.2f\n", leaseContract.getMonthlyPayment(), leaseContract.getTotalPrice());
+                finalizeContract(vin, leaseContract);
+                break;
+            } catch (UnsupportedOperationException ex) {
+                System.out.println("Something went wrong.\n Please Try Again!");
+            }
+        }
+    }
+
+    //finalize sales contract
+    public static void finalizeContract(int vin, Contract contract) {
+        //put in while true
+        if (contract instanceof SalesContract) {
+            System.out.println("""
+                    Would you like to finalize the contract?
+                    1) Yes
+                    2) No""");
+            int option = Integer.parseInt(scanner.nextLine());
+            switch (option) {
+                case 1:
+                   dealership.addSalesContract(vin, contract);
+                    System.out.println("Vehicle Sold!");
+                    break;
+                case 2:
+                    System.out.println("Contract Canceled. Returning to home screen.");
+                    break;
+            }
+        }
+        if (contract instanceof LeaseContract) {
+            System.out.println("""
+                    Would you like to finalize the contract?
+                    1) Yes
+                    2) No""");
+            int option = Integer.parseInt(scanner.nextLine());
+            switch (option) {
+                case 1:
+                    dealership.addLeaseContract(vin, contract);
+                    System.out.println("Vehicle Leased!");
+                    break;
+                case 2:
+                    System.out.println("Contract Canceled. Returning to home screen.");
+                    break;
+
+            }
+        }
+
+    }
+    public  void findCar() {
+        while (true) {
+            try {
+                System.out.println("Please enter the Vin number of the car you wish to Create the Contract for: ");
+                int vin = Integer.parseInt(scanner.nextLine());
+                if (dealership.carIsAvalivble(vin) != null) {
+                    contractType(vin);
+                    break;
+                } else {
+                    System.out.println("Car not found.");
+                }
+            } catch (NumberFormatException ex) {
+                System.out.println("Enter vin as a number");
+            }
+        }
+    }
 }
-
-
-
-
-
-

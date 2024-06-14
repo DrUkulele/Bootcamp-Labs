@@ -1,26 +1,32 @@
 package org.example;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class SalesContract extends Contract {
     //properties
-    private int salesContractID;
     private  BigDecimal salesTax;
+    @Getter
     private final BigDecimal recordingFee = new BigDecimal("100");
     private BigDecimal processingFee; //$295 for vehicles under $10,000 and $495 for all others
+    @Getter
+    @Setter
     private boolean finance;
     private BigDecimal interestRate; //all loans are 4.25%(.0425) for 48 months if the price is $10,000 or more, otherwise they are 5.25%(.0525) for 24 months
     private BigDecimal monthlyPayment;
+
     //constructor
+    public SalesContract(String customerName, String customerEmail, Vehicle vehicleSold, boolean finance) {
+        super(customerName, customerEmail, vehicleSold);
+        this.finance = finance;
+    }
+
+
+
 
 
     //getters and setters
