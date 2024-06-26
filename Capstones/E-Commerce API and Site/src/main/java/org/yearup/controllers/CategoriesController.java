@@ -37,6 +37,9 @@ public class CategoriesController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> getById(@PathVariable int id) {
+        if(categoryDao.getById(id) == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(categoryDao.getById(id), HttpStatus.OK);
     }
 
@@ -44,6 +47,9 @@ public class CategoriesController {
     // https://localhost:8080/categories/1/products
     @GetMapping("/{categoryId}/products")
     public ResponseEntity<List<Product>> getProductsById(@PathVariable int categoryId) {
+        if(productDao.listByCategoryId(categoryId) == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(productDao.listByCategoryId(categoryId), HttpStatus.OK);
     }
 
